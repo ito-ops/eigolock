@@ -1,5 +1,5 @@
 // エイポン Service Worker — オフライン対応（アプリの殻をキャッシュ）
-const CACHE = 'eipon-v3';
+const CACHE = 'eipon-v4';
 const ASSETS = [
   './', './index.html', './manifest.json',
   './icons/icon-192.png', './icons/icon-512.png', './icons/apple-touch-icon.png'
@@ -33,8 +33,7 @@ self.addEventListener('fetch', e => {
     // HTMLは「最新優先」。取れなければキャッシュにフォールバック（オフライン）。
     e.respondWith(
       fetch(req).then(res => {
-        const copy = res.clone();
-        caches.open(CACHE).then(c => c.put('./index.html', copy));
+        if (res && res.ok) { const copy = res.clone(); caches.open(CACHE).then(c => c.put('./index.html', copy)); }
         return res;
       }).catch(() => caches.match('./index.html'))
     );
@@ -43,8 +42,7 @@ self.addEventListener('fetch', e => {
   // それ以外（アイコン・フォント・ライブラリ等の静的アセット）は「キャッシュ優先」。
   e.respondWith(
     caches.match(req).then(hit => hit || fetch(req).then(res => {
-      const copy = res.clone();
-      caches.open(CACHE).then(c => { try { c.put(req, copy); } catch (_) {} });
+      if (res && res.ok) { const copy = res.clone(); caches.open(CACHE).then(c => { try { c.put(req, copy); } catch (_) {} }); }
       return res;
     }).catch(() => hit))
   );
