@@ -1501,7 +1501,8 @@ function regionCode(id){return `<span class="region-code">${esc(id)}</span>`;}
 /* ---------- マスタデータ ---------- */
 const CATEGORIES=[
   {id:'daily',name:'日常'},{id:'food',name:'食事'},{id:'work',name:'仕事'},
-  {id:'hobby',name:'趣味'},{id:'travel',name:'旅行'},{id:'feelings',name:'気持ち'},{id:'opinion',name:'意見'}
+  {id:'hobby',name:'趣味'},{id:'travel',name:'旅行'},{id:'feelings',name:'気持ち'},
+  {id:'opinion',name:'意見'},{id:'study',name:'勉強'},{id:'health',name:'健康'},{id:'future',name:'将来'}
 ];
 const CAT_NAME=Object.fromEntries(CATEGORIES.map(c=>[c.id,c.name]));
 const LEVELS=['A1','A2','B1','B2','C1'];
@@ -1520,28 +1521,79 @@ const REGIONS=[
 const REGION=Object.fromEntries(REGIONS.map(r=>[r.id,r]));
 // 質問バンク（ハイブリッドのバンク側）
 const QUESTIONS=[
-  {category:'food',level:'A1',text:'What did you have for lunch today?',hint:'今日のお昼ごはんは何でしたか？'},
-  {category:'food',level:'A2',text:'What is your favorite food and why?',hint:'好きな食べ物とその理由は？'},
-  {category:'food',level:'B1',text:'Do you prefer cooking at home or eating out? Why?',hint:'自炊と外食、どちらが好き？理由も。'},
+  // 日常
   {category:'daily',level:'A1',text:'How are you feeling right now?',hint:'今の気分は？'},
   {category:'daily',level:'A1',text:'What time did you wake up today?',hint:'今日は何時に起きた？'},
+  {category:'daily',level:'A1',text:'What are you doing right now?',hint:'今、何をしている？'},
   {category:'daily',level:'A2',text:'What is one thing you did this morning?',hint:'今朝したことを一つ。'},
   {category:'daily',level:'A2',text:'What are your plans for this weekend?',hint:'今週末の予定は？'},
+  {category:'daily',level:'A2',text:'How was your day today?',hint:'今日はどんな一日だった？'},
+  {category:'daily',level:'A2',text:'What is the weather like today?',hint:'今日の天気は？'},
+  {category:'daily',level:'B1',text:'What is one small habit that improves your day?',hint:'一日を良くする小さな習慣は？'},
+  // 食事
+  {category:'food',level:'A1',text:'What did you have for lunch today?',hint:'今日のお昼ごはんは何でしたか？'},
+  {category:'food',level:'A1',text:'Do you like coffee or tea?',hint:'コーヒー派？紅茶派？'},
+  {category:'food',level:'A2',text:'What is your favorite food and why?',hint:'好きな食べ物とその理由は？'},
+  {category:'food',level:'A2',text:'What did you have for dinner last night?',hint:'昨夜の夕食は？'},
+  {category:'food',level:'A2',text:'What food do you want to try someday?',hint:'いつか食べてみたい料理は？'},
+  {category:'food',level:'B1',text:'Do you prefer cooking at home or eating out? Why?',hint:'自炊と外食、どちらが好き？理由も。'},
+  {category:'food',level:'B1',text:'What dish from your country would you recommend?',hint:'おすすめの自国料理は？'},
+  // 仕事
   {category:'work',level:'A2',text:'What are you working on today?',hint:'今日取り組んでいることは？'},
+  {category:'work',level:'A2',text:'What time do you usually start work?',hint:'いつも何時に仕事を始める？'},
   {category:'work',level:'B1',text:'What was the most difficult task at work recently?',hint:'最近の仕事で一番大変だったことは？'},
   {category:'work',level:'B1',text:'If you could change one thing about your job, what would it be?',hint:'仕事で一つ変えられるなら何を変える？'},
+  {category:'work',level:'B1',text:'What part of your job do you enjoy most?',hint:'仕事で一番楽しい部分は？'},
+  {category:'work',level:'B2',text:'How do you stay focused during a busy day?',hint:'忙しい日に集中を保つには？'},
+  // 趣味
   {category:'hobby',level:'A1',text:'What do you like to do in your free time?',hint:'自由な時間に何をするのが好き？'},
   {category:'hobby',level:'A2',text:'What hobby would you like to start this year?',hint:'今年始めたい趣味は？'},
+  {category:'hobby',level:'A2',text:'What music do you usually listen to?',hint:'普段どんな音楽を聴く？'},
+  {category:'hobby',level:'A2',text:'What did you do last weekend?',hint:'先週末は何をした？'},
   {category:'hobby',level:'B1',text:'Describe a movie or book you enjoyed recently.',hint:'最近よかった映画か本を説明して。'},
+  {category:'hobby',level:'B1',text:'What are you good at, and how did you learn it?',hint:'得意なことと、どう学んだか？'},
+  // 旅行
+  {category:'travel',level:'A1',text:'Have you been to another country?',hint:'外国に行ったことある？'},
   {category:'travel',level:'A2',text:'Where would you like to travel next?',hint:'次に旅行したい場所は？'},
-  {category:'travel',level:'B1',text:'Tell me about the best trip you have ever taken.',hint:'今までで一番よかった旅行について。'},
   {category:'travel',level:'A2',text:'What do you usually pack for a short trip?',hint:'短い旅行に普段何を持っていく？'},
-  {category:'feelings',level:'A2',text:'What made you smile today?',hint:'今日うれしかったことは？'},
-  {category:'feelings',level:'B1',text:'How do you relax when you feel stressed?',hint:'ストレスを感じたときどうリラックスする？'},
+  {category:'travel',level:'A2',text:'Do you prefer the mountains or the sea? Why?',hint:'山派？海派？理由も。'},
+  {category:'travel',level:'B1',text:'Tell me about the best trip you have ever taken.',hint:'今までで一番よかった旅行について。'},
+  {category:'travel',level:'B1',text:'Describe a place in your town a visitor should see.',hint:'旅行者に見せたい地元の場所は？'},
+  // 気持ち
   {category:'feelings',level:'A1',text:'Are you tired today? Why or why not?',hint:'今日は疲れてる？理由は？'},
+  {category:'feelings',level:'A2',text:'What made you smile today?',hint:'今日うれしかったことは？'},
+  {category:'feelings',level:'A2',text:'What are you looking forward to this week?',hint:'今週の楽しみは？'},
+  {category:'feelings',level:'A2',text:'What are you grateful for today?',hint:'今日感謝したいことは？'},
+  {category:'feelings',level:'B1',text:'How do you relax when you feel stressed?',hint:'ストレスを感じたときどうリラックスする？'},
+  {category:'feelings',level:'B1',text:'What is something that always cheers you up?',hint:'いつも元気が出ることは？'},
+  // 意見
   {category:'opinion',level:'B1',text:'Do you think smartphones make us more or less productive?',hint:'スマホは生産性を上げる？下げる？'},
   {category:'opinion',level:'B1',text:'What is one habit you want to build this month?',hint:'今月つくりたい習慣は？'},
-  {category:'opinion',level:'B2',text:'Should people study English every day? Share your opinion.',hint:'英語は毎日勉強すべき？意見を。'}
+  {category:'opinion',level:'B1',text:'Is it better to plan everything or be flexible?',hint:'全部計画する vs 柔軟、どっち？'},
+  {category:'opinion',level:'B1',text:'What advice would you give your younger self?',hint:'昔の自分への助言は？'},
+  {category:'opinion',level:'B2',text:'Should people study English every day? Share your opinion.',hint:'英語は毎日勉強すべき？意見を。'},
+  {category:'opinion',level:'B2',text:'Do you think working from home is better than the office?',hint:'在宅 vs 出社、どっちが良い？'},
+  // 勉強
+  {category:'study',level:'A1',text:'What English word did you learn recently?',hint:'最近覚えた英単語は？'},
+  {category:'study',level:'A2',text:'Why are you learning English?',hint:'なぜ英語を学んでいる？'},
+  {category:'study',level:'A2',text:'How do you usually study English?',hint:'普段どう英語を勉強している？'},
+  {category:'study',level:'A2',text:'Do you prefer studying in the morning or at night?',hint:'朝勉強派？夜勉強派？'},
+  {category:'study',level:'B1',text:'What is the hardest part of learning English for you?',hint:'英語学習で一番難しいのは？'},
+  {category:'study',level:'B1',text:'What is your goal in English this year?',hint:'今年の英語の目標は？'},
+  // 健康
+  {category:'health',level:'A1',text:'How many hours did you sleep last night?',hint:'昨夜は何時間寝た？'},
+  {category:'health',level:'A1',text:'What time do you usually go to bed?',hint:'いつも何時に寝る？'},
+  {category:'health',level:'A2',text:'What do you do to stay healthy?',hint:'健康のために何をしている？'},
+  {category:'health',level:'A2',text:'How do you feel today, on a scale of one to ten?',hint:'今日の調子は10段階でいくつ？'},
+  {category:'health',level:'B1',text:'How often do you exercise, and what do you do?',hint:'どのくらい運動する？何を？'},
+  {category:'health',level:'B1',text:'How do you feel after a good night of sleep?',hint:'よく眠れた後の気分は？'},
+  // 将来
+  {category:'future',level:'A2',text:'What do you want to do next year?',hint:'来年したいことは？'},
+  {category:'future',level:'A2',text:'What is one skill you want to learn?',hint:'学びたいスキルは？'},
+  {category:'future',level:'A2',text:'What are you saving money for?',hint:'何のために貯金している？'},
+  {category:'future',level:'B1',text:'Where do you see yourself in five years?',hint:'5年後どうなっていたい？'},
+  {category:'future',level:'B1',text:'If you could have any job, what would it be?',hint:'どんな仕事でもできるなら？'},
+  {category:'future',level:'B2',text:'What change do you hope to make in your life?',hint:'人生で起こしたい変化は？'}
 ];
 // 地域別イディオム（定期的に出題・添削に織り込む）
 const IDIOMS=[
@@ -1735,13 +1787,16 @@ function aiStyleQuestion(){
   // 弱点や興味に合わせて生成した風（プロトはテンプレ）。本番はGeminiで生成。
   const cat=profile.interests[Math.floor(Math.random()*profile.interests.length)]||'daily';
   const templates={
-    daily:['Tell me about one small thing that made today good.','What is something you want to finish before tonight?'],
-    food:['Describe your perfect breakfast in three sentences.','What food do you want to try someday, and why?'],
-    work:['What is one skill you want to improve for work?','Explain your morning routine before work.'],
-    hobby:['What hobby could you talk about for an hour? Tell me a little.','What did you create or make recently?'],
-    travel:['If you had a free ticket anywhere, where would you go first?','Describe a place in your town a visitor should see.'],
-    feelings:['What is on your mind right now? Try to explain it in English.','What are you grateful for today?'],
-    opinion:['Is it better to plan everything or be flexible? Why?','What advice would you give your past self?']
+    daily:['Tell me about one small thing that made today good.','What is something you want to finish before tonight?','Describe your morning in three sentences.'],
+    food:['Describe your perfect breakfast in three sentences.','What food do you want to try someday, and why?','If you could eat only one meal forever, what would it be?'],
+    work:['What is one skill you want to improve for work?','Explain your morning routine before work.','Describe a small win you had at work recently.'],
+    hobby:['What hobby could you talk about for an hour? Tell me a little.','What did you create or make recently?','What would you do with a totally free day?'],
+    travel:['If you had a free ticket anywhere, where would you go first?','Describe a place in your town a visitor should see.','What is the most beautiful place you have ever seen?'],
+    feelings:['What is on your mind right now? Try to explain it in English.','What are you grateful for today?','Describe your mood today in three words, then explain.'],
+    opinion:['Is it better to plan everything or be flexible? Why?','What advice would you give your past self?',"What is one thing schools should teach but usually don't?"],
+    study:['What helps you remember new English words?','Describe your ideal way to study English.','What is one English mistake you keep making?'],
+    health:['What is one healthy habit you are proud of?','How do you feel when you skip exercise?','Describe your perfect relaxing evening.'],
+    future:['What does your ideal weekend look like in five years?','What is one dream you have not given up on?','If money was not a problem, what would you do?']
   };
   const arr=templates[cat]||templates.daily;
   return {category:cat,level:profile.level,text:arr[Math.floor(Math.random()*arr.length)],hint:'（AI生成風の質問）自由に英作文してみましょう。',source:'ai'};
@@ -1828,47 +1883,77 @@ function buildMockFeedback({question,answer,profile}){
   let a=answer.trim();
   let corrected=a;
   const issues=[];
-  const add=(type,from,to,ex)=>issues.push({type,from,to,ex});
+  const seen=new Set();
+  const add=(type,from,to,ex)=>{const k=type+'|'+from+'|'+to;if(seen.has(k))return;seen.add(k);issues.push({type,from,to,ex});};
+  const capLike=(from,to)=>(/^[A-Z]/.test(from)&&/^[a-z]/.test(to))?to.charAt(0).toUpperCase()+to.slice(1):to;
 
-  // 文頭の大文字化
+  // ① 文法：文頭の大文字
   if(/^[a-z]/.test(corrected)){const w0=corrected.split(/\s/)[0];corrected=corrected.charAt(0).toUpperCase()+corrected.slice(1);add('grammar',w0,corrected.split(/\s/)[0],'英文の文頭は大文字で始めます。');}
-  // 一人称 i → I
+  // ① 文法：一人称 i → I
   if(/\bi\b/.test(corrected)){corrected=corrected.replace(/\bi\b/g,'I');add('grammar','i','I','一人称の「私」は文中でも常に大文字の I です。');}
-  // よくある綴り/短縮形
-  const sp=[[/\bdont\b/gi,"don't","短縮形には ' が必要です。"],[/\bcant\b/gi,"can't","短縮形には ' が必要です。"],[/\bdoesnt\b/gi,"doesn't","短縮形には ' が必要です。"],[/\bim\b/gi,"I'm","「私は〜」は I'm と書きます。"],[/\balot\b/gi,"a lot","「たくさん」は a lot（2語）。alot は誤りです。"],[/\bvery much\b/gi,"a lot","会話では very much より a lot が自然なことが多いです。"]];
-  for(const [re,to,ex] of sp){const m=corrected.match(re);if(m){add('spelling',m[0],to,ex);corrected=corrected.replace(re,to);}}
+  // ① 文法：言語名 english → English
+  if(/\benglish\b/.test(corrected)){corrected=corrected.replace(/\benglish\b/g,'English');add('grammar','english','English','言語名 English はいつも大文字で始めます。');}
+
+  // ② スペル・短縮形
+  const SPELL=[[/\bdont\b/gi,"don't","短縮形 don't にはアポストロフィ ' が必要です。"],[/\bdoesnt\b/gi,"doesn't","短縮形 doesn't には ' が必要です。"],[/\bdidnt\b/gi,"didn't","短縮形 didn't には ' が必要です。"],[/\bcant\b/gi,"can't","短縮形 can't には ' が必要です。"],[/\bwont\b/gi,"won't","短縮形 won't には ' が必要です。"],[/\bisnt\b/gi,"isn't","短縮形 isn't には ' が必要です。"],[/\barent\b/gi,"aren't","短縮形 aren't には ' が必要です。"],[/\bwasnt\b/gi,"wasn't","短縮形 wasn't には ' が必要です。"],[/\bim\b/gi,"I'm","「私は〜」は I'm（大文字 I ＋ '）と書きます。"],[/\bive\b/gi,"I've","「〜したことがある」は I've。"],[/\byoure\b/gi,"you're","you are の短縮は you're です。"],[/\bthats\b/gi,"that's","that is の短縮は that's です。"],[/\balot\b/gi,"a lot","「たくさん」は a lot（2語）。alot は誤りです。"],[/\brecieve\b/gi,"receive","i より前に e。receive が正しい綴りです。"],[/\bbecuase\b/gi,"because","because の綴りに注意。"],[/\bdefinately\b/gi,"definitely","正しくは definitely です。"],[/\btommorow\b/gi,"tomorrow","tomorrow（m は1つ・r は1つ）。"],[/\buntill\b/gi,"until","until（l は1つ）。"],[/\bbeleive\b/gi,"believe","believe の綴りに注意。"],[/\bseperate\b/gi,"separate","separate（中央は a）。"],[/\bwich\b/gi,"which","which の綴り。"],[/\bteh\b/gi,"the","the の打ち間違いです。"],[/\bthier\b/gi,"their","their の綴り。"],[/\bfreind\b/gi,"friend","friend（ie の順）。"],[/\bwierd\b/gi,"weird","weird は例外的な綴りです。"],[/\bhappend\b/gi,"happened","過去形は happened です。"]];
+  for(const [re,to,ex] of SPELL){const m=corrected.match(re);if(m){const from=m[0];const rep=capLike(from,to);add('spelling',from,rep,ex);corrected=corrected.replace(re,rep);}}
+
+  // ① 文法：前置詞・語法・比較・不可算
+  const GRAM=[[/\bdepend of\b/gi,"depend on","「〜による」は depend on です。"],[/\bdiscuss about\b/gi,"discuss","discuss は他動詞。about は不要です。"],[/\blisten music\b/gi,"listen to music","listen の後は to が必要です。"],[/\bgo to home\b/gi,"go home","home は副詞なので to は不要（go home）。"],[/\bmarried with\b/gi,"married to","「〜と結婚している」は married to。"],[/\binterested for\b/gi,"interested in","「〜に興味がある」は interested in。"],[/\bgood in\b/gi,"good at","「〜が得意」は good at。"],[/\bmore better\b/gi,"better","more better は誤り。better だけで比較級です。"],[/\bmore easier\b/gi,"easier","more easier は誤り。easier です。"],[/\binformations\b/gi,"information","information は不可算。複数形にしません。"],[/\badvices\b/gi,"advice","advice は不可算。複数形にしません。"]];
+  for(const [re,to,ex] of GRAM){const m=corrected.match(re);if(m){const from=m[0];const rep=capLike(from,to);add('grammar',from,rep,ex);corrected=corrected.replace(re,rep);}}
+
+  // ① 文法：a → an（母音の音の前）
+  corrected=corrected.replace(/\b([Aa]) (apple|egg|hour|orange|umbrella|idea|email|elephant|island|honest|amazing|interesting|easy|important|exciting|annoying|old|early|awesome|item)\b/g,(mm,art,w)=>{const to=(art==='A'?'An':'an')+' '+w;add('grammar',art+' '+w,to,'母音の音で始まる語の前は a → an（例: an apple）。');return to;});
+  // ① 文法：be ＋ 動詞の原形（I am go → I go）
+  corrected=corrected.replace(/\b(am|is|are) (go|eat|like|want|study|play|work|run|read|write|sleep|cook|watch|need|make|take|live|come|know|feel)\b/gi,(mm,be,vb)=>{add('grammar',be+' '+vb,vb,"be動詞＋動詞の原形は誤りです。現在の習慣なら動詞だけ（例: I go）。");return vb;});
+  // ① 文法：三単現（he/she/it ＋ 原形 → s）
+  const SVA={go:'goes',do:'does',have:'has',like:'likes',want:'wants',need:'needs',make:'makes',take:'takes',say:'says',know:'knows',think:'thinks',feel:'feels',live:'lives',work:'works',play:'plays',eat:'eats',watch:'watches',study:'studies',love:'loves',get:'gets',come:'comes',look:'looks',run:'runs',read:'reads',write:'writes',cook:'cooks',sleep:'sleeps'};
+  corrected=corrected.replace(/\b(He|She|It|he|she|it) ([a-z]+)\b/g,(mm,subj,vb)=>{if(SVA[vb]){add('grammar',subj+' '+vb,subj+' '+SVA[vb],'三人称単数（he/she/it）の現在形は動詞に s が付きます。');return subj+' '+SVA[vb];}return mm;});
+  // ① 文法：didn't/doesn't/don't ＋ 過去形 → 原形
+  const P2B={went:'go',ate:'eat',saw:'see',did:'do',had:'have',made:'make',took:'take',came:'come',got:'get',knew:'know',thought:'think',felt:'feel',bought:'buy',gave:'give',said:'say',ran:'run',wrote:'write'};
+  corrected=corrected.replace(/\b(didn't|did not|doesn't|don't) ([a-z]+)\b/gi,(mm,neg,vb)=>{const low=vb.toLowerCase();if(P2B[low]){add('grammar',neg+' '+vb,neg+' '+P2B[low],neg+" の後は動詞の原形にします（例: didn't go）。");return neg+' '+P2B[low];}return mm;});
+  // ① 文法：ピリオドの後の文頭も大文字に
+  const beforeCap=corrected;
+  corrected=corrected.replace(/([.!?]\s+)([a-z])/g,(m,p,c)=>p+c.toUpperCase());
+  if(beforeCap!==corrected){add('grammar','文中の文頭','大文字','「. ! ?」の後も新しい文の始まりなので大文字にします。');}
   // 弱い形容詞 → 言い換え提案（修正ではなく suggestion 側で扱う）
   const suggestions=[];
-  const weakAdj=corrected.match(/\bvery (good|nice|big|happy|tired|tasty|delicious)\b/i);
+  const weakAdj=corrected.match(/\bvery (good|nice|big|small|happy|sad|tired|tasty|delicious|hot|cold|hard|easy|important|beautiful|interesting)\b/i);
   if(weakAdj){
-    const map={good:'great / excellent',nice:'wonderful / lovely',big:'huge / enormous',happy:'thrilled / delighted',tired:'exhausted / worn out',tasty:'delicious / mouth-watering',delicious:'amazing / heavenly'};
+    const map={good:'great / excellent',nice:'wonderful / lovely',big:'huge / enormous',small:'tiny',happy:'thrilled / delighted',sad:'heartbroken',tired:'exhausted / worn out',tasty:'delicious',delicious:'mouth-watering',hot:'boiling',cold:'freezing',hard:'tough / challenging',easy:'effortless',important:'crucial / essential',beautiful:'stunning / gorgeous',interesting:'fascinating'};
     const base=weakAdj[1].toLowerCase();
-    suggestions.push({expression:`${map[base]||'…'}（"very ${base}" の代わりに）`,note:'強い形容詞1語にすると、よりネイティブらしく引き締まります。'});
+    suggestions.push({expression:`${map[base]||'…'}（"very ${base}" の代わりに）`,note:'「very＋形容詞」を強い1語に置き換えると、ぐっとネイティブらしく引き締まります。'});
   }
   // 文末ピリオド
   if(corrected && !/[.!?]$/.test(corrected)){corrected+='.';add('naturalness','(文末)','. ','英文の終わりにはピリオドを付けましょう。');}
 
   // カテゴリ別のネイティブ表現サジェスト
   const byCat={
-    food:[{expression:'grab a bite',note:'「軽く食べる」のカジュアルな言い方。'},{expression:'I’m craving ~',note:'「無性に〜が食べたい」。'}],
-    daily:[{expression:'I ended up ~ing',note:'「結局〜することになった」。自然な日常表現。'},{expression:'first thing in the morning',note:'「朝いちばんに」。'}],
-    work:[{expression:'on my plate',note:'「抱えているタスク」。I have a lot on my plate.'},{expression:'touch base',note:'「軽く連絡を取り合う」。'}],
-    hobby:[{expression:'I’m really into ~',note:'「〜にハマっている」。'},{expression:'in my free time',note:'「空き時間に」。'}],
-    travel:[{expression:'off the beaten path',note:'「定番から外れた穴場の」。'},{expression:'a must-see',note:'「絶対見るべき場所」。'}],
-    feelings:[{expression:'It made my day',note:'「一日が幸せになった」。'},{expression:'I’m a bit under the weather',note:'「少し体調が悪い」。'}],
-    opinion:[{expression:'In my opinion, ~',note:'意見を述べる定番の出だし。'},{expression:'It depends on ~',note:'「〜による」。便利な一言。'}]
+    daily:[{expression:'I ended up ~ing',note:'「結局〜することになった」。自然な日常表現。'},{expression:'first thing in the morning',note:'「朝いちばんに」。'},{expression:'get around to ~ing',note:'「やっと〜に取りかかる」。'}],
+    food:[{expression:'grab a bite',note:'「軽く食べる」のカジュアルな言い方。'},{expression:"I'm craving ~",note:'「無性に〜が食べたい」。'},{expression:'a hidden gem',note:'「穴場の名店」。'}],
+    work:[{expression:'on my plate',note:'「抱えているタスク」。I have a lot on my plate.'},{expression:'touch base',note:'「軽く連絡を取り合う」。'},{expression:'wrap up',note:'「（仕事を）終わらせる」。'}],
+    hobby:[{expression:"I'm really into ~",note:'「〜にハマっている」。'},{expression:'in my free time',note:'「空き時間に」。'},{expression:'kill time',note:'「暇つぶしをする」。'}],
+    travel:[{expression:'off the beaten path',note:'「定番から外れた穴場の」。'},{expression:'a must-see',note:'「絶対見るべき場所」。'},{expression:'soak up the atmosphere',note:'「雰囲気を満喫する」。'}],
+    feelings:[{expression:'It made my day',note:'「一日が幸せになった」。'},{expression:"I'm a bit under the weather",note:'「少し体調が悪い」。'},{expression:'mixed feelings',note:'「複雑な気持ち」。'}],
+    opinion:[{expression:'In my opinion, ~',note:'意見を述べる定番の出だし。'},{expression:'It depends on ~',note:'「〜による」。便利な一言。'},{expression:'I would argue that ~',note:'「〜だと思う」少し力強い言い方。'}],
+    study:[{expression:'get the hang of ~',note:'「〜のコツをつかむ」。'},{expression:'brush up on ~',note:'「〜を復習して磨く」。'},{expression:'stick with it',note:'「あきらめず続ける」。'}],
+    health:[{expression:'work out',note:'「運動する・体を鍛える」。'},{expression:'get some rest',note:'「少し休む」。'},{expression:'recharge my batteries',note:'「英気を養う」。'}],
+    future:[{expression:'down the road',note:'「将来的に」。'},{expression:'set a goal',note:'「目標を立てる」。'},{expression:'take the plunge',note:'「思い切って始める」。'}]
   };
   (byCat[question.category]||byCat.daily).slice(0,2).forEach(s=>suggestions.push(s));
 
   // 語彙提案
   const vocabByCat={
-    food:[{word:'leftovers',meaning:'残り物',example:'I had leftovers for lunch.'},{word:'homemade',meaning:'自家製の',example:'This is a homemade sauce.'}],
-    daily:[{word:'routine',meaning:'日課',example:'It’s part of my daily routine.'},{word:'errand',meaning:'用事・お使い',example:'I ran a few errands today.'}],
-    work:[{word:'deadline',meaning:'締め切り',example:'The deadline is tomorrow.'},{word:'priority',meaning:'優先事項',example:'That’s my top priority.'}],
-    hobby:[{word:'fascinating',meaning:'とても興味深い',example:'The story was fascinating.'},{word:'pastime',meaning:'娯楽・趣味',example:'Reading is my favorite pastime.'}],
-    travel:[{word:'itinerary',meaning:'旅程',example:'Here’s our itinerary for the trip.'},{word:'scenery',meaning:'景色',example:'The scenery was breathtaking.'}],
-    feelings:[{word:'overwhelmed',meaning:'いっぱいいっぱいの',example:'I felt overwhelmed today.'},{word:'content',meaning:'満ち足りた',example:'I feel content right now.'}],
-    opinion:[{word:'productive',meaning:'生産的な',example:'I had a productive day.'},{word:'distraction',meaning:'気を散らすもの',example:'My phone is a big distraction.'}]
+    daily:[{word:'routine',meaning:'日課',example:"It's part of my daily routine."},{word:'errand',meaning:'用事・お使い',example:'I ran a few errands today.'},{word:'productive',meaning:'充実した・はかどる',example:'I had a productive morning.'}],
+    food:[{word:'leftovers',meaning:'残り物',example:'I had leftovers for lunch.'},{word:'homemade',meaning:'手作りの',example:'This is a homemade sauce.'},{word:'filling',meaning:'お腹いっぱいになる',example:'The meal was really filling.'}],
+    work:[{word:'deadline',meaning:'締め切り',example:'The deadline is tomorrow.'},{word:'priority',meaning:'優先事項',example:"That's my top priority."},{word:'colleague',meaning:'同僚',example:'I asked a colleague for help.'}],
+    hobby:[{word:'fascinating',meaning:'とても興味深い',example:'The story was fascinating.'},{word:'pastime',meaning:'娯楽・趣味',example:'Reading is my favorite pastime.'},{word:'hooked',meaning:'夢中になった',example:"I'm hooked on this game."}],
+    travel:[{word:'itinerary',meaning:'旅程',example:"Here's our itinerary."},{word:'scenery',meaning:'景色',example:'The scenery was breathtaking.'},{word:'local',meaning:'地元の（人・もの）',example:'We tried some local food.'}],
+    feelings:[{word:'overwhelmed',meaning:'いっぱいいっぱいの',example:'I felt overwhelmed today.'},{word:'content',meaning:'満ち足りた',example:'I feel content right now.'},{word:'relieved',meaning:'ほっとした',example:'I was relieved to hear it.'}],
+    opinion:[{word:'productive',meaning:'生産的な',example:'I had a productive day.'},{word:'distraction',meaning:'気を散らすもの',example:'My phone is a big distraction.'},{word:'flexible',meaning:'柔軟な',example:'I try to stay flexible.'}],
+    study:[{word:'vocabulary',meaning:'語彙',example:"I'm building my vocabulary."},{word:'review',meaning:'復習する',example:'I review new words every night.'},{word:'consistent',meaning:'継続的な',example:'Being consistent is the key.'}],
+    health:[{word:'workout',meaning:'運動・トレーニング',example:'I did a short workout.'},{word:'energetic',meaning:'元気な',example:'I feel energetic today.'},{word:'rest',meaning:'休息',example:'I need some rest.'}],
+    future:[{word:'goal',meaning:'目標',example:'I set a new goal.'},{word:'opportunity',meaning:'機会',example:'It was a great opportunity.'},{word:'achieve',meaning:'達成する',example:'I want to achieve more.'}]
   };
   const vocab=(vocabByCat[question.category]||vocabByCat.daily).slice(0,2);
 
@@ -1883,11 +1968,22 @@ function buildMockFeedback({question,answer,profile}){
   score=Math.max(42,Math.min(98,score));
   const level_estimate=score>=85?'B2':score>=72?'B1':score>=58?'A2':'A1';
 
-  const praises=['まず英語で書けたことが一番大事です！','伝えようとする姿勢がしっかり出ています。','短くても要点が伝わる良い回答です。','語順の基本ができています。'];
+  const praises=['まず英語で書けたことが一番大事です！','伝えようとする姿勢がしっかり出ています。','短くても要点が伝わる良い回答です。','語順の基本ができています。','自分の言葉で表現できていて素晴らしいです。'];
   const praise=praises[wordCount%praises.length];
-  const summary=issues.length===0
-    ? '大きな間違いはありません。次はもう少し長く、具体例を1つ加えてみましょう。'
-    : `${issues.length}点の修正で、より自然な英語になります。特に${issues[0].type==='grammar'?'文法（大文字や I の使い方）':issues[0].type==='spelling'?'綴り・短縮形':'仕上げ（句読点など）'}を意識しましょう。`;
+  const gCount=issues.filter(i=>i.type==='grammar').length;
+  const sCount=issues.filter(i=>i.type==='spelling').length;
+  const oCount=issues.length-gCount-sCount;
+  let summary;
+  if(issues.length===0){
+    summary='大きな間違いはありません！次は一文を少し長くして、理由や具体例を1つ足してみましょう。';
+  }else{
+    const parts=[];
+    if(gCount)parts.push(`文法 ${gCount}点`);
+    if(sCount)parts.push(`スペル ${sCount}点`);
+    if(oCount)parts.push(`仕上げ ${oCount}点`);
+    const tip=gCount?'特に動詞の形・大文字・冠詞を意識してみましょう。':sCount?'綴りを落ち着いて見直せば完璧です。':'最後の句読点まで丁寧に。';
+    summary=`${parts.join('・')}を直すと、ぐっと自然な英語になります。${tip}`;
+  }
 
   return {corrected,score,level_estimate,praise,summary,issues,suggestions:suggestions.slice(0,3),vocab,region_idiom};
 }
