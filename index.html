@@ -1,0 +1,1334 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>EigoLock | 開くたびに英語1問（プロトタイプ）</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdn.simpleicons.org">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<!-- PWA（ホーム画面に追加でアプリのように動く） -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#177e74">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="EigoLock">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<style>
+:root{
+  --navy:#123d38; --navy-dark:#0b2f2d; --navy-mid:#286c63; --teal:#1f9b8e;
+  --orange:#bd6643; --orange-dark:#9b4d30; --gold:#c99a3d;
+  --ink:#13241f; --ink-soft:#62746d;
+  --gray-bg:#f4f7f5; --blue-bg:#e8f1ef; --teal-bg:#e7f5f2; --line:#d9e4df;
+  --white:#fff; --green:#23795e; --red:#b94646; --lav:#6672a8;
+  --surface:#fffffc; --surface-2:#f9fbf9;
+  --radius:8px; --radius-sm:6px; --pill:999px;
+  --shadow:0 10px 30px rgba(18,61,56,.08); --shadow-lg:0 22px 60px rgba(18,61,56,.16);
+  --font-jp:"游ゴシック体",YuGothic,"游ゴシック","ヒラギノ角ゴ Pro W3","メイリオ",sans-serif;
+  --font-en:"Montserrat",sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{font-size:16px}
+body{font-family:var(--font-jp);color:var(--ink);background:linear-gradient(135deg,#d6e3e4 0%,#d9e5e2 45%,#dcd8ec 100%) fixed;line-height:1.7;-webkit-font-smoothing:antialiased;min-height:100vh}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,select,textarea{font-family:inherit;font-size:1rem}
+.en{font-family:var(--font-en)}
+.hide{display:none!important}
+
+/* ====== 共通パーツ ====== */
+.card{background:rgba(255,255,255,.9);border:1px solid rgba(255,255,255,.9);backdrop-filter:blur(8px);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px;margin-bottom:16px}
+.card-title{font-size:1rem;font-weight:800;color:var(--navy);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.card-title .bar{display:inline-block;width:4px;height:18px;border-radius:2px;background:var(--orange)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:var(--pill);font-weight:700;transition:.2s;font-size:.9rem;padding:12px 24px}
+.btn-primary{background:linear-gradient(120deg,var(--navy),var(--teal));color:#fff;box-shadow:0 4px 12px rgba(23,126,116,.3)}
+.btn-primary:hover{filter:brightness(1.06);transform:translateY(-1px)}
+.btn-ghost{border:1.5px solid var(--navy);color:var(--navy);background:#fff}
+.btn-ghost:hover{background:var(--blue-bg)}
+.btn-block{width:100%}
+.btn-sm{padding:8px 16px;font-size:.8rem}
+.btn[disabled]{opacity:.45;cursor:not-allowed;transform:none!important}
+.tag{display:inline-block;border-radius:var(--pill);font-size:.68rem;font-weight:700;padding:3px 11px}
+.tag-navy{background:var(--blue-bg);color:var(--navy)}
+.tag-orange{background:#fdeae3;color:var(--orange-dark)}
+.tag-teal{background:var(--teal-bg);color:var(--teal)}
+.tag-green{background:#e7f5ee;color:var(--green)}
+.tag-gray{background:var(--gray-bg);color:var(--ink-soft)}
+.tag-red{background:#fbe9e9;color:var(--red)}
+.tag-lav{background:#efecfb;color:var(--lav)}
+.muted{color:var(--ink-soft)}
+.empty{padding:30px;text-align:center;color:var(--ink-soft);font-size:.86rem}
+label.fld{display:block;margin-bottom:14px}
+label.fld>span{display:block;font-size:.78rem;font-weight:700;color:var(--ink-soft);margin-bottom:6px}
+input[type=text].in,textarea.in,select.in{width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:12px;background:var(--gray-bg);transition:.2s}
+input[type=text].in:focus,textarea.in:focus,select.in:focus{outline:none;border-color:var(--navy);background:#fff;box-shadow:0 0 0 3px rgba(20,126,116,.1)}
+textarea.in{resize:vertical;min-height:96px;line-height:1.6}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);border-radius:var(--pill);padding:8px 14px;font-size:.8rem;font-weight:700;transition:.15s;user-select:none}
+.chip:hover{border-color:var(--navy-mid)}
+.chip.on{background:var(--navy);border-color:var(--navy);color:#fff}
+/* レベル選択カード */
+.levelcard{display:block;width:100%;text-align:left;border:2px solid var(--line);border-radius:14px;padding:12px 14px;background:#fff;transition:.18s;margin-bottom:8px}
+.levelcard:hover{border-color:var(--navy-mid)}
+.levelcard.on{border-color:var(--orange);background:#fff8f5;box-shadow:0 4px 14px rgba(236,138,94,.15)}
+.levelcard .lc-head{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.levelcard .lc-badge{font-family:var(--font-en);font-weight:800;font-size:.78rem;color:#fff;background:var(--navy);border-radius:8px;padding:2px 9px}
+.levelcard.on .lc-badge{background:var(--orange)}
+.levelcard .lc-title{font-weight:800;font-size:.88rem;color:var(--ink)}
+.levelcard .lc-can{font-size:.76rem;color:var(--ink-soft);margin-bottom:6px;line-height:1.55}
+.levelcard .lc-eg{font-family:var(--font-en);font-size:.76rem;color:var(--navy);background:var(--gray-bg);border-radius:8px;padding:6px 9px;line-height:1.5}
+/* トグル */
+.tgl{display:inline-flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
+.tgl input{display:none}
+.tgl .track{width:46px;height:26px;border-radius:var(--pill);background:var(--line);position:relative;transition:.2s;flex-shrink:0}
+.tgl .thumb{position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.tgl input:checked+.track{background:var(--teal)}
+.tgl input:checked+.track .thumb{transform:translateX(20px)}
+
+/* ====== 設定/オンボーディング画面 ====== */
+#setup{position:fixed;inset:0;z-index:1000;overflow-y:auto;background:linear-gradient(135deg,#cfdfe0,#d6e4e1 50%,#d9d4ec);padding:28px 16px 48px}
+.setup-wrap{max-width:520px;margin:0 auto}
+.setup-brand{text-align:center;margin-bottom:18px}
+.setup-logo{font-family:var(--font-en);font-weight:800;font-size:1.8rem;color:var(--navy);letter-spacing:0}
+.setup-logo .lock{color:var(--orange)}
+.setup-tag{font-family:var(--font-en);font-size:.66rem;letter-spacing:0;color:var(--navy-mid);text-transform:uppercase;margin-top:2px}
+.setup-lead{font-size:.84rem;color:var(--ink-soft);margin-top:10px;line-height:1.7}
+
+/* ====== アプリ全体 ====== */
+#app{display:none;min-height:100vh;padding-bottom:78px}
+.topbar{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.82);backdrop-filter:blur(12px);box-shadow:0 2px 12px rgba(23,90,82,.07);display:flex;align-items:center;justify-content:space-between;padding:0 18px;height:58px}
+.topbar .brand{font-family:var(--font-en);font-weight:800;font-size:1.15rem;color:var(--navy)}
+.topbar .brand .lock{color:var(--orange)}
+.topbar .streak{display:flex;align-items:center;gap:5px;font-size:.82rem;font-weight:800;color:var(--orange-dark);background:#fdeae3;border-radius:var(--pill);padding:5px 12px}
+.wrap{max-width:860px;margin:0 auto;padding:18px 16px}
+.view{display:none;animation:fadeup .35s ease}
+.view.active{display:block}
+@keyframes fadeup{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.page-title{font-size:1.3rem;font-weight:800;color:var(--navy);margin-bottom:4px}
+.page-title .en-label{display:block;font-family:var(--font-en);font-size:.6rem;letter-spacing:0;color:var(--teal);text-transform:uppercase;font-weight:700}
+.page-desc{font-size:.82rem;color:var(--ink-soft);margin-bottom:16px}
+
+/* 下部ナビ */
+.bottomnav{position:fixed;bottom:0;left:0;right:0;z-index:200;background:rgba(255,255,255,.96);backdrop-filter:blur(10px);box-shadow:0 -4px 16px rgba(20,58,135,.1);padding:6px 4px calc(6px + env(safe-area-inset-bottom))}
+.bottomnav-inner{max-width:560px;margin:0 auto;display:flex;justify-content:space-around}
+.bnav{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:.6rem;font-weight:700;color:var(--ink-soft);padding:5px 10px;border-radius:10px;transition:.15s}
+.bnav svg{width:23px;height:23px}
+.bnav.active{color:var(--navy)}
+.bnav.active .ic{background:var(--blue-bg)}
+.bnav .ic{padding:3px 10px;border-radius:var(--pill);transition:.15s}
+
+/* ====== ホーム / ダッシュボード ====== */
+.hero{background:linear-gradient(120deg,var(--navy) 0%,var(--navy-mid) 60%,var(--teal) 110%);border-radius:20px;color:#fff;padding:22px;position:relative;overflow:hidden;margin-bottom:16px;box-shadow:var(--shadow-lg)}
+.hero::before{content:"";position:absolute;width:240px;height:240px;border-radius:50%;background:rgba(255,255,255,.08);top:-110px;right:-50px}
+.hero-greet{font-size:.8rem;opacity:.9}
+.hero-name{font-size:1.35rem;font-weight:800;margin:2px 0 12px}
+.hero-stats{display:flex;gap:10px;position:relative;z-index:1}
+.hstat{flex:1;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);border-radius:14px;padding:11px 8px;text-align:center;backdrop-filter:blur(4px)}
+.hstat .n{font-family:var(--font-en);font-size:1.5rem;font-weight:800;line-height:1.1}
+.hstat .l{font-size:.62rem;font-weight:700;opacity:.92;margin-top:2px}
+.hstat .n.gold{color:var(--gold)}
+
+/* モック・ホーム画面（SNSロック体験） */
+.phone-note{font-size:.78rem;color:var(--ink-soft);margin-bottom:12px;line-height:1.6}
+.appgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px 8px}
+.appicon{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:.66rem;font-weight:700;color:var(--ink);position:relative}
+.appicon .ic{width:60px;height:60px;border-radius:17px;display:flex;align-items:center;justify-content:center;font-size:1.7rem;box-shadow:0 4px 10px rgba(23,90,82,.18);transition:.15s}
+.appicon:active .ic{transform:scale(.92)}
+.appicon .lockbadge{position:absolute;top:-5px;right:8px;width:22px;height:22px;border-radius:50%;background:var(--orange);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.7rem;box-shadow:0 2px 6px rgba(0,0,0,.2);border:2px solid #fff}
+
+.weak-row{display:flex;align-items:center;gap:10px;padding:9px 2px;border-bottom:1px dashed var(--line)}
+.weak-row:last-child{border-bottom:none}
+.weak-row .cnt{font-family:var(--font-en);font-weight:800;color:var(--orange-dark);width:34px}
+.weak-row .nm{flex:1;font-size:.86rem;font-weight:600}
+
+/* ====== ロック画面（出題＆添削） ====== */
+#lock{position:fixed;inset:0;z-index:1500;background:linear-gradient(150deg,#0f6159 0%,#177e74 45%,#2cb5a3 120%);display:none;flex-direction:column;overflow-y:auto;color:#fff}
+#lock.open{display:flex;animation:fadeup .25s ease}
+#lock::before{content:"";position:absolute;width:340px;height:340px;border-radius:50%;background:rgba(255,255,255,.07);top:-140px;right:-90px;pointer-events:none}
+.lock-inner{position:relative;z-index:1;width:100%;max-width:560px;margin:0 auto;padding:26px 18px 40px;min-height:100vh;display:flex;flex-direction:column}
+.lock-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.lock-locktag{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.25);border-radius:var(--pill);padding:6px 14px;font-size:.76rem;font-weight:700;backdrop-filter:blur(4px)}
+.lock-skip{font-size:.78rem;font-weight:700;color:rgba(255,255,255,.85);border:1.5px solid rgba(255,255,255,.4);border-radius:var(--pill);padding:7px 16px}
+.lock-skip:hover{background:rgba(255,255,255,.12)}
+.idiom-card{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25);border-radius:16px;padding:14px 16px;margin-bottom:16px;backdrop-filter:blur(4px)}
+.idiom-card .hd{font-size:.68rem;font-weight:800;letter-spacing:0;opacity:.95;display:flex;align-items:center;gap:6px;margin-bottom:6px}
+.idiom-card .ex{font-family:var(--font-en);font-size:1.05rem;font-weight:700;color:var(--gold)}
+.idiom-card .mn{font-size:.78rem;opacity:.95;margin-top:2px}
+.idiom-card .eg{font-size:.74rem;opacity:.85;margin-top:5px;font-style:italic}
+.q-card{background:#fff;color:var(--ink);border-radius:20px;padding:22px;box-shadow:var(--shadow-lg)}
+.q-meta{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.q-text{font-family:var(--font-en);font-size:1.28rem;font-weight:700;color:var(--navy);line-height:1.4}
+.q-hint{font-size:.82rem;color:var(--ink-soft);margin-top:8px}
+.q-hint-btn{font-size:.76rem;font-weight:700;color:var(--teal);margin-top:8px}
+.q-form{margin-top:16px}
+.lock-actions{margin-top:14px;display:flex;flex-direction:column;gap:10px}
+.lock-foot{margin-top:auto;text-align:center;font-size:.72rem;opacity:.8;padding-top:20px}
+
+/* 添削結果 */
+.res-scorebar{display:flex;align-items:center;gap:16px;background:#fff;color:var(--ink);border-radius:18px;padding:16px 18px;margin-bottom:14px;box-shadow:var(--shadow)}
+.score-ring{width:74px;height:74px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;color:#fff}
+.score-ring .s{font-family:var(--font-en);font-size:1.5rem;font-weight:800;line-height:1}
+.score-ring .o{font-size:.54rem;font-weight:700;opacity:.9}
+.res-scorebar .lvl{font-family:var(--font-en);font-weight:800;color:var(--navy);font-size:1.05rem}
+.res-scorebar .praise{font-size:.82rem;color:var(--ink-soft);margin-top:2px}
+.res-block{background:#fff;color:var(--ink);border-radius:16px;padding:16px 18px;margin-bottom:12px;box-shadow:var(--shadow)}
+.res-block h4{font-size:.82rem;font-weight:800;color:var(--navy);margin-bottom:10px;display:flex;align-items:center;gap:7px}
+.res-corrected{font-family:var(--font-en);font-size:1rem;line-height:1.6;background:var(--teal-bg);border-radius:12px;padding:12px 14px}
+.res-corrected mark{background:#ffe6b3;color:var(--ink);border-radius:4px;padding:0 3px;font-weight:700}
+.res-orig{font-family:var(--font-en);font-size:.88rem;color:var(--ink-soft);margin-top:8px;padding:0 4px}
+.res-orig s{opacity:.7}
+.issue{border-left:3px solid var(--orange);background:var(--gray-bg);border-radius:0 10px 10px 0;padding:10px 12px;margin-bottom:8px}
+.issue:last-child{margin-bottom:0}
+.issue .ttl{font-size:.84rem;font-weight:700}
+.issue .ttl .from{color:var(--red);text-decoration:line-through;font-family:var(--font-en)}
+.issue .ttl .to{color:var(--green);font-family:var(--font-en)}
+.issue .ex{font-size:.78rem;color:var(--ink-soft);margin-top:4px}
+.sugg{display:flex;gap:10px;align-items:flex-start;padding:8px 2px;border-bottom:1px dashed var(--line)}
+.sugg:last-child{border-bottom:none}
+.sugg .ex{font-family:var(--font-en);font-weight:700;color:var(--navy);font-size:.92rem}
+.sugg .nt{font-size:.76rem;color:var(--ink-soft)}
+.vocab-line{display:flex;align-items:center;gap:10px;padding:9px 2px;border-bottom:1px dashed var(--line)}
+.vocab-line:last-child{border-bottom:none}
+.vocab-line .w{font-family:var(--font-en);font-weight:700;color:var(--navy);font-size:.92rem}
+.vocab-line .m{font-size:.78rem;color:var(--ink-soft);flex:1}
+.vocab-line .save{font-size:.72rem;font-weight:700;color:var(--teal);border:1.5px solid var(--teal);border-radius:var(--pill);padding:4px 12px;flex-shrink:0;transition:.15s}
+.vocab-line .save.done{background:var(--teal);color:#fff}
+
+/* スピナー */
+.spinner{width:38px;height:38px;border:4px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite;margin:0 auto}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-wrap{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:40px 0}
+
+/* ====== 復習 / 履歴 ====== */
+.filterbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.hist-item{display:flex;gap:12px;align-items:flex-start;padding:14px;border:1.5px solid var(--line);border-radius:16px;background:#fff;margin-bottom:10px;cursor:pointer;transition:.15s}
+.hist-item:hover{border-color:var(--navy-mid);box-shadow:var(--shadow)}
+.hist-score{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:var(--font-en);font-weight:800;color:#fff;flex-shrink:0;font-size:1.05rem}
+.hist-body{flex:1;min-width:0}
+.hist-q{font-family:var(--font-en);font-size:.9rem;font-weight:700;color:var(--navy);line-height:1.35}
+.hist-a{font-size:.8rem;color:var(--ink-soft);margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hist-meta{font-size:.68rem;color:var(--ink-soft);margin-top:5px;display:flex;gap:8px;align-items:center}
+
+/* ====== 単語・表現帳 ====== */
+.vgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.vcard{background:#fff;border:1.5px solid var(--line);border-radius:16px;padding:14px;position:relative;transition:.15s}
+.vcard:hover{box-shadow:var(--shadow)}
+.vcard .w{font-family:var(--font-en);font-weight:700;color:var(--navy);font-size:1rem}
+.vcard .region{position:absolute;top:10px;right:10px;font-size:1rem}
+.vcard .m{font-size:.8rem;color:var(--ink);margin-top:4px;transition:.2s}
+.vcard .eg{font-family:var(--font-en);font-size:.76rem;color:var(--ink-soft);font-style:italic;margin-top:6px}
+.vcard.flip .m,.vcard.flip .eg{filter:blur(5px)}
+.vcard .del{position:absolute;bottom:10px;right:10px;font-size:.68rem;color:var(--ink-soft)}
+.vcard .del:hover{color:var(--red)}
+
+/* ====== 進捗 ====== */
+.steps{display:flex;align-items:flex-start;justify-content:space-between;position:relative;margin:6px 4px 0}
+.steps::before{content:"";position:absolute;top:17px;left:8%;right:8%;height:3px;background:var(--line);border-radius:2px}
+.step{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:6px;width:20%;text-align:center}
+.step .dot{width:36px;height:36px;border-radius:50%;background:#fff;border:3px solid var(--line);display:flex;align-items:center;justify-content:center;font-family:var(--font-en);font-weight:700;font-size:.82rem;color:#b6bcc9;transition:.3s}
+.step.done .dot{background:var(--navy);border-color:var(--navy);color:#fff}
+.step.current .dot{background:var(--orange);border-color:var(--orange);color:#fff;box-shadow:0 0 0 5px rgba(236,138,94,.2)}
+.step .lbl{font-size:.66rem;font-weight:700;color:var(--ink-soft)}
+.step.current .lbl{color:var(--orange-dark)}
+.spark{display:flex;align-items:flex-end;gap:4px;height:90px;margin-top:6px}
+.spark .bar{flex:1;background:linear-gradient(to top,var(--teal),var(--navy-mid));border-radius:4px 4px 0 0;min-height:4px;position:relative;transition:.3s}
+.spark .bar span{position:absolute;top:-16px;left:50%;transform:translateX(-50%);font-family:var(--font-en);font-size:.56rem;font-weight:700;color:var(--ink-soft)}
+.spark-x{display:flex;gap:4px;margin-top:4px}
+.spark-x div{flex:1;text-align:center;font-size:.54rem;color:var(--ink-soft)}
+
+/* ====== トースト / モーダル ====== */
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--navy);color:#fff;border-radius:var(--pill);padding:12px 24px;font-size:.84rem;font-weight:700;box-shadow:var(--shadow-lg);opacity:0;pointer-events:none;transition:.3s;z-index:2000;max-width:90vw;text-align:center}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.modal-bg{position:fixed;inset:0;background:rgba(14,30,40,.5);z-index:1800;display:none;align-items:flex-end;justify-content:center;padding:0;backdrop-filter:blur(2px)}
+.modal-bg.show{display:flex}
+.modal{background:#fff;border-radius:22px 22px 0 0;max-width:560px;width:100%;padding:22px 20px calc(28px + env(safe-area-inset-bottom));box-shadow:var(--shadow-lg);animation:slideup .28s ease;max-height:88vh;overflow-y:auto}
+@keyframes slideup{from{transform:translateY(40px);opacity:.6}to{transform:none;opacity:1}}
+.modal .grip{width:42px;height:5px;border-radius:3px;background:var(--line);margin:0 auto 14px}
+
+@media(min-width:620px){
+  .modal-bg{align-items:center;padding:20px}
+  .modal{border-radius:22px}
+  .vgrid{grid-template-columns:1fr 1fr 1fr}
+}
+@media(max-width:380px){ .appgrid{grid-template-columns:repeat(3,1fr)} .vgrid{grid-template-columns:1fr} }
+
+/* ====== Premium visual refresh ====== */
+body{
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.72) 0%,rgba(255,255,255,0) 34%),
+    linear-gradient(135deg,#eef4f1 0%,#f7f8f5 46%,#edf2ef 100%) fixed;
+  letter-spacing:0;
+}
+button{touch-action:manipulation}
+.card{
+  background:var(--surface);
+  border:1px solid rgba(19,36,31,.08);
+  backdrop-filter:none;
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  padding:22px;
+}
+.card-title{
+  color:var(--ink);
+  font-size:.94rem;
+  letter-spacing:0;
+}
+.card-title .bar{
+  width:3px;
+  height:18px;
+  background:var(--teal);
+  border-radius:var(--pill);
+}
+.btn{
+  min-height:46px;
+  border-radius:var(--radius);
+  font-size:.9rem;
+  font-weight:800;
+  letter-spacing:0;
+  box-shadow:none;
+}
+.btn svg,.ui-ico{
+  width:17px;
+  height:17px;
+  flex:0 0 auto;
+  stroke-width:2;
+}
+.btn-primary{
+  background:linear-gradient(135deg,var(--navy-dark),var(--teal));
+  box-shadow:0 14px 28px rgba(18,61,56,.18);
+}
+.btn-primary:hover{filter:none;transform:translateY(-1px);box-shadow:0 18px 34px rgba(18,61,56,.22)}
+.btn-ghost{
+  background:var(--surface);
+  border:1px solid rgba(18,61,56,.18);
+  color:var(--navy);
+}
+.tag{
+  border-radius:var(--radius-sm);
+  font-size:.68rem;
+  padding:4px 9px;
+}
+.chip{
+  min-height:38px;
+  border-radius:var(--radius);
+  background:var(--surface);
+  border:1px solid rgba(19,36,31,.12);
+  color:var(--ink);
+  box-shadow:0 1px 0 rgba(19,36,31,.04);
+}
+.chip.on{
+  background:#102f2c;
+  border-color:#102f2c;
+  color:#fff;
+}
+.chip.on .region-code{
+  background:rgba(255,255,255,.18);
+  color:#fff;
+}
+.levelcard{
+  border:1px solid rgba(19,36,31,.12);
+  border-radius:var(--radius);
+  padding:14px;
+  background:var(--surface);
+  box-shadow:0 1px 0 rgba(19,36,31,.04);
+}
+.levelcard:hover{border-color:rgba(31,155,142,.45)}
+.levelcard.on{
+  border-color:var(--teal);
+  background:#f3fbf8;
+  box-shadow:0 10px 24px rgba(31,155,142,.12);
+}
+.levelcard .lc-badge{
+  border-radius:var(--radius-sm);
+  background:var(--navy);
+}
+.levelcard.on .lc-badge{background:var(--teal)}
+.levelcard .lc-eg{
+  border-radius:var(--radius-sm);
+  background:var(--surface-2);
+  color:var(--navy);
+}
+input[type=text].in,textarea.in,select.in{
+  border:1px solid rgba(19,36,31,.12);
+  border-radius:var(--radius);
+  background:var(--surface-2);
+}
+input[type=text].in:focus,textarea.in:focus,select.in:focus{
+  border-color:var(--teal);
+  box-shadow:0 0 0 4px rgba(31,155,142,.12);
+}
+#setup{
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.76),rgba(255,255,255,0) 36%),
+    linear-gradient(135deg,#e9f1ee,#f8faf8 58%,#edf3f0);
+  padding:40px 16px 54px;
+}
+.setup-wrap{max-width:560px}
+.setup-brand{text-align:left;margin-bottom:22px}
+.setup-logo,.topbar .brand{
+  color:var(--ink);
+  letter-spacing:0;
+  line-height:1;
+}
+.setup-logo{
+  display:inline-flex;
+  align-items:baseline;
+  font-size:2rem;
+  padding-bottom:10px;
+  border-bottom:2px solid var(--teal);
+}
+.setup-logo .lock,.topbar .brand .lock{color:var(--teal)}
+.setup-tag,.page-title .en-label{
+  letter-spacing:0;
+  color:var(--orange-dark);
+  text-transform:none;
+}
+.setup-lead{
+  max-width:430px;
+  color:var(--ink-soft);
+  font-size:.92rem;
+}
+.topbar{
+  height:64px;
+  background:rgba(255,255,252,.94);
+  border-bottom:1px solid rgba(19,36,31,.08);
+  box-shadow:none;
+}
+.topbar .brand{font-size:1.12rem}
+.topbar .streak{
+  gap:8px;
+  color:var(--navy);
+  background:var(--surface-2);
+  border:1px solid rgba(19,36,31,.1);
+  border-radius:var(--radius);
+  padding:6px 10px;
+}
+.streak .label{font-size:.68rem;color:var(--ink-soft);font-weight:700}
+.wrap{max-width:900px;padding:20px 16px 24px}
+.page-title{
+  color:var(--ink);
+  font-size:1.34rem;
+  line-height:1.25;
+}
+.bottomnav{
+  background:rgba(255,255,252,.98);
+  border-top:1px solid rgba(19,36,31,.08);
+  box-shadow:0 -12px 28px rgba(19,36,31,.08);
+}
+.bnav{
+  min-width:58px;
+  min-height:54px;
+  border-radius:var(--radius);
+  color:#75847e;
+}
+.bnav .ic{
+  min-width:36px;
+  min-height:28px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:var(--radius);
+}
+.bnav.active{color:var(--navy)}
+.bnav.active .ic{background:var(--teal-bg)}
+.hero{
+  background:linear-gradient(135deg,#102f2c 0%,#155f56 60%,#1f9b8e 100%);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow-lg);
+  padding:24px;
+}
+.hero::before{display:none}
+.hero-greet{font-size:.84rem;opacity:.82}
+.hero-name{font-size:1.42rem;letter-spacing:0}
+.hstat{
+  background:rgba(255,255,255,.1);
+  border-color:rgba(255,255,255,.2);
+  border-radius:var(--radius);
+}
+.hstat .n.gold{color:#f1c766}
+.phone-note{
+  color:var(--ink-soft);
+  font-size:.83rem;
+}
+.appgrid{gap:18px 10px}
+.appicon{
+  min-height:92px;
+  padding:6px 4px;
+  border-radius:var(--radius);
+}
+.appicon:focus-visible{
+  outline:3px solid rgba(31,155,142,.35);
+  outline-offset:2px;
+}
+.appicon .ic{
+  width:62px;
+  height:62px;
+  border-radius:16px;
+  font-size:0;
+  box-shadow:0 14px 24px rgba(19,36,31,.16);
+  overflow:hidden;
+}
+.appicon .brand-img{
+  width:31px;
+  height:31px;
+  display:block;
+  object-fit:contain;
+}
+.appicon .fallback-svg{
+  width:31px;
+  height:31px;
+  stroke:#fff;
+}
+.appicon .lockbadge{
+  top:0;
+  right:10px;
+  width:24px;
+  height:24px;
+  background:#102f2c;
+  border:2px solid var(--surface);
+  box-shadow:0 8px 14px rgba(19,36,31,.2);
+}
+.appicon .lockbadge svg{
+  width:13px;
+  height:13px;
+  stroke:#fff;
+}
+#lock{
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,0) 42%),
+    linear-gradient(145deg,#092b29 0%,#123d38 48%,#1a8f84 100%);
+}
+#lock::before{display:none}
+.lock-inner{max-width:580px}
+.lock-locktag,.idiom-card{
+  border-radius:var(--radius);
+  background:rgba(255,255,255,.12);
+}
+.lock-skip{border-radius:var(--radius)}
+.q-card,.res-scorebar,.res-block{
+  border-radius:var(--radius);
+}
+.q-text{color:var(--ink);letter-spacing:0}
+.q-hint-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  color:var(--navy);
+}
+.score-ring{border-radius:var(--radius)}
+.issue{border-radius:0 var(--radius) var(--radius) 0}
+.res-block > button.vocab-line.save{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:auto;
+  min-height:38px;
+  border:1px solid var(--teal);
+  border-radius:var(--radius);
+  padding:8px 14px;
+  background:var(--surface);
+  color:var(--teal);
+  font-weight:800;
+  border-bottom:1px solid var(--teal);
+}
+.res-block > button.vocab-line.save.done{
+  background:var(--teal);
+  color:#fff;
+}
+.hist-item,.vcard{
+  border-radius:var(--radius);
+  border:1px solid rgba(19,36,31,.1);
+  background:var(--surface);
+}
+.hist-score{border-radius:var(--radius)}
+.step .dot{border-radius:var(--radius)}
+.modal{border-radius:var(--radius) var(--radius) 0 0}
+.modal .grip{border-radius:var(--pill)}
+.region-code{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:28px;
+  height:22px;
+  padding:0 7px;
+  border-radius:var(--radius-sm);
+  background:rgba(18,61,56,.1);
+  color:var(--navy);
+  font-family:var(--font-en);
+  font-size:.66rem;
+  font-weight:800;
+  line-height:1;
+}
+.vcard .region .region-code{
+  min-width:30px;
+  height:24px;
+}
+.theme-icon{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:28px;
+  height:28px;
+  border-radius:var(--radius);
+  background:var(--teal-bg);
+  color:var(--navy);
+}
+.theme-icon svg{width:16px;height:16px}
+@media(min-width:620px){
+  .modal{border-radius:var(--radius)}
+}
+</style>
+</head>
+<body>
+
+<!-- ===================== 設定 / オンボーディング ===================== -->
+<div id="setup">
+  <div class="setup-wrap">
+    <div class="setup-brand">
+      <div class="setup-logo">Eigo<span class="lock">Lock</span></div>
+      <div class="setup-tag">Answer to unlock</div>
+      <div class="setup-lead">スマホを開くたびに英語で1問。<br>答えると解除＝アウトプットが毎日の習慣に。<br>まずはあなたに合わせて設定しましょう。</div>
+    </div>
+    <div class="card" id="setup-form"><!-- JSで描画 --></div>
+    <button class="btn btn-primary btn-block" onclick="completeSetup()">はじめる</button>
+    <p class="muted" style="text-align:center;font-size:.72rem;margin-top:14px">注記: これはデザイン確認用のWebプロトタイプです。データは端末内のみに保存され、AI添削はサンプル（モック）です。</p>
+  </div>
+</div>
+
+<!-- ===================== アプリ ===================== -->
+<div id="app">
+  <div class="topbar">
+    <div class="brand">Eigo<span class="lock">Lock</span></div>
+    <div class="streak" id="topStreak">0日</div>
+  </div>
+
+  <div class="wrap">
+    <!-- ホーム -->
+    <section class="view active" id="v-home"></section>
+    <!-- 復習 -->
+    <section class="view" id="v-review"></section>
+    <!-- 単語帳 -->
+    <section class="view" id="v-vocab"></section>
+    <!-- 進捗 -->
+    <section class="view" id="v-progress"></section>
+    <!-- 設定 -->
+    <section class="view" id="v-settings"></section>
+  </div>
+
+  <nav class="bottomnav">
+    <div class="bottomnav-inner">
+      <button class="bnav active" data-nav="home" onclick="nav('home')"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8M5 10v10h14V10"/></svg></span>ホーム</button>
+      <button class="bnav" data-nav="review" onclick="nav('review')"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h10"/></svg></span>復習</button>
+      <button class="bnav" data-nav="vocab" onclick="nav('vocab')"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5a2 2 0 012-2h12v18H6a2 2 0 01-2-2z"/><path d="M8 7h7M8 11h7"/></svg></span>単語帳</button>
+      <button class="bnav" data-nav="progress" onclick="nav('progress')"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19V5M4 19h16M8 16v-5M12 16V8M16 16v-3"/></svg></span>進捗</button>
+      <button class="bnav" data-nav="settings" onclick="nav('settings')"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 00-.1-1l2-1.6-2-3.4-2.4 1a7 7 0 00-1.7-1l-.4-2.5H10l-.4 2.5a7 7 0 00-1.7 1l-2.4-1-2 3.4L5.1 11a7 7 0 000 2l-2 1.6 2 3.4 2.4-1a7 7 0 001.7 1l.4 2.5h4l.4-2.5a7 7 0 001.7-1l2.4 1 2-3.4-2-1.6a7 7 0 00.1-1z"/></svg></span>設定</button>
+    </div>
+  </nav>
+</div>
+
+<!-- ===================== ロック画面（出題＆添削） ===================== -->
+<div id="lock"><div class="lock-inner" id="lock-inner"></div></div>
+
+<!-- トースト / モーダル -->
+<div id="toast"></div>
+<div class="modal-bg" id="modal-bg" onclick="if(event.target===this)closeModal()"><div class="modal" id="modal-body"></div></div>
+
+<script>
+/* =========================================================================
+   EigoLock — プロトタイプ ロジック（依存ライブラリなし / localStorage）
+   ========================================================================= */
+const NS='eigolock.v1';
+const store={
+  get(k,fb){try{const v=localStorage.getItem(NS+'.'+k);return v?JSON.parse(v):fb}catch(e){return fb}},
+  set(k,v){localStorage.setItem(NS+'.'+k,JSON.stringify(v))}
+};
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(t._tm);t._tm=setTimeout(()=>t.classList.remove('show'),2400);}
+function showModal(html){$('#modal-body').innerHTML='<div class="grip"></div>'+html;$('#modal-bg').classList.add('show');}
+function closeModal(){$('#modal-bg').classList.remove('show');}
+function todayStr(){const d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();}
+function fmtDateTime(iso){const d=new Date(iso);const w=['日','月','火','水','木','金','土'][d.getDay()];return `${d.getMonth()+1}/${d.getDate()}(${w}) ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;}
+
+const ICONS={
+  lock:'<svg class="ui-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 118 0v3"/></svg>',
+  unlock:'<svg class="ui-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 017.4-2.1"/></svg>',
+  check:'<svg class="ui-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg>',
+  edit:'<svg class="ui-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>',
+  search:'<svg class="ui-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>',
+  hint:'<svg class="ui-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M8.2 14.6A6 6 0 1115.8 14c-.7.5-1.1 1.2-1.2 2H9.4c-.1-.6-.5-1.1-1.2-1.4z"/></svg>',
+  book:'<svg class="ui-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 5a2 2 0 012-2h12v18H6a2 2 0 01-2-2z"/><path d="M8 7h7M8 11h7"/></svg>',
+  trend:'<svg class="ui-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 19V5M4 19h16M7 15l4-4 3 3 5-7"/></svg>',
+  target:'<svg class="ui-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>',
+  note:'<svg class="ui-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M7 3h8l4 4v14H7a2 2 0 01-2-2V5a2 2 0 012-2z"/><path d="M14 3v5h5M8 13h8M8 17h6"/></svg>',
+  camera:'<svg class="fallback-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 8a2 2 0 012-2h2l1.5-2h5L16 6h2a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V8z"/><circle cx="12" cy="13" r="4"/></svg>'
+};
+function icon(name){return ICONS[name]||'';}
+function regionCode(id){return `<span class="region-code">${esc(id)}</span>`;}
+function appIconHTML(app){
+  if(app.icon)return `<img class="brand-img" src="${esc(app.icon)}" alt="" aria-hidden="true" loading="lazy">`;
+  return icon(app.fallback||'camera');
+}
+
+/* ---------- マスタデータ ---------- */
+const CATEGORIES=[
+  {id:'daily',name:'日常'},{id:'food',name:'食事'},{id:'work',name:'仕事'},
+  {id:'hobby',name:'趣味'},{id:'travel',name:'旅行'},{id:'feelings',name:'気持ち'},{id:'opinion',name:'意見'}
+];
+const CAT_NAME=Object.fromEntries(CATEGORIES.map(c=>[c.id,c.name]));
+const LEVELS=['A1','A2','B1','B2','C1'];
+// レベルの説明（自分のレベルがわからない人向けに「こんな会話ができる」を提示）
+const LEVEL_INFO={
+  A1:{name:'入門 — 単語とあいさつ',can:'単語やかんたんな決まり文句でやりとり。あいさつ・自己紹介・数字や時間が言えるレベル。',eg:'"Hi, I\'m Ken. Nice to meet you." / "I like coffee. Thank you!"'},
+  A2:{name:'初級 — かんたんな日常会話',can:'身近な話題を短い文で話せる。買い物・道案内・1日の予定など。',eg:'"I usually get up at seven and go to work." / "How much is this?"'},
+  B1:{name:'中級 — 日常会話はだいたいOK',can:'旅行先のやりとりや、経験・予定を自分の言葉で説明できる。',eg:'"I missed my train, so I took a taxi instead." / "I\'ve studied English for two years."'},
+  B2:{name:'中上級 — 意見が言える',can:'幅広い話題で理由をつけて意見を述べ、議論にも参加できる。',eg:'"I think remote work boosts focus, though it can feel a bit lonely."'},
+  C1:{name:'上級 — 流暢で自然',can:'複雑な内容もニュアンス豊かに、なめらかに表現できる。仕事の交渉も。',eg:'"Had I known earlier, I would have handled it differently."'}
+};
+const REGIONS=[
+  {id:'US',name:'アメリカ'},{id:'CA',name:'カナダ'},
+  {id:'UK',name:'イギリス'},{id:'AU',name:'オーストラリア'}
+];
+const REGION=Object.fromEntries(REGIONS.map(r=>[r.id,r]));
+const SNS_APPS=[
+  {id:'instagram',name:'Instagram',icon:'https://cdn.simpleicons.org/instagram/FFFFFF',bg:'linear-gradient(135deg,#f9ce34 0%,#ee2a7b 48%,#6228d7 100%)'},
+  {id:'x',name:'X',icon:'https://cdn.simpleicons.org/x/FFFFFF',bg:'#0f0f10'},
+  {id:'tiktok',name:'TikTok',icon:'https://cdn.simpleicons.org/tiktok/FFFFFF',bg:'#010101'},
+  {id:'youtube',name:'YouTube',icon:'https://cdn.simpleicons.org/youtube/FFFFFF',bg:'#ff0033'},
+  {id:'line',name:'LINE',icon:'https://cdn.simpleicons.org/line/FFFFFF',bg:'#06c755'},
+  {id:'facebook',name:'Facebook',icon:'https://cdn.simpleicons.org/facebook/FFFFFF',bg:'#1877f2'},
+  {id:'maps',name:'Google Maps',icon:'https://cdn.simpleicons.org/googlemaps/FFFFFF',bg:'linear-gradient(135deg,#4285f4 0%,#34a853 100%)'},
+  {id:'camera',name:'Camera',fallback:'camera',bg:'linear-gradient(135deg,#4b5563 0%,#111827 100%)'}
+];
+// 質問バンク（ハイブリッドのバンク側）
+const QUESTIONS=[
+  {category:'food',level:'A1',text:'What did you have for lunch today?',hint:'今日のお昼ごはんは何でしたか？'},
+  {category:'food',level:'A2',text:'What is your favorite food and why?',hint:'好きな食べ物とその理由は？'},
+  {category:'food',level:'B1',text:'Do you prefer cooking at home or eating out? Why?',hint:'自炊と外食、どちらが好き？理由も。'},
+  {category:'daily',level:'A1',text:'How are you feeling right now?',hint:'今の気分は？'},
+  {category:'daily',level:'A1',text:'What time did you wake up today?',hint:'今日は何時に起きた？'},
+  {category:'daily',level:'A2',text:'What is one thing you did this morning?',hint:'今朝したことを一つ。'},
+  {category:'daily',level:'A2',text:'What are your plans for this weekend?',hint:'今週末の予定は？'},
+  {category:'work',level:'A2',text:'What are you working on today?',hint:'今日取り組んでいることは？'},
+  {category:'work',level:'B1',text:'What was the most difficult task at work recently?',hint:'最近の仕事で一番大変だったことは？'},
+  {category:'work',level:'B1',text:'If you could change one thing about your job, what would it be?',hint:'仕事で一つ変えられるなら何を変える？'},
+  {category:'hobby',level:'A1',text:'What do you like to do in your free time?',hint:'自由な時間に何をするのが好き？'},
+  {category:'hobby',level:'A2',text:'What hobby would you like to start this year?',hint:'今年始めたい趣味は？'},
+  {category:'hobby',level:'B1',text:'Describe a movie or book you enjoyed recently.',hint:'最近よかった映画か本を説明して。'},
+  {category:'travel',level:'A2',text:'Where would you like to travel next?',hint:'次に旅行したい場所は？'},
+  {category:'travel',level:'B1',text:'Tell me about the best trip you have ever taken.',hint:'今までで一番よかった旅行について。'},
+  {category:'travel',level:'A2',text:'What do you usually pack for a short trip?',hint:'短い旅行に普段何を持っていく？'},
+  {category:'feelings',level:'A2',text:'What made you smile today?',hint:'今日うれしかったことは？'},
+  {category:'feelings',level:'B1',text:'How do you relax when you feel stressed?',hint:'ストレスを感じたときどうリラックスする？'},
+  {category:'feelings',level:'A1',text:'Are you tired today? Why or why not?',hint:'今日は疲れてる？理由は？'},
+  {category:'opinion',level:'B1',text:'Do you think smartphones make us more or less productive?',hint:'スマホは生産性を上げる？下げる？'},
+  {category:'opinion',level:'B1',text:'What is one habit you want to build this month?',hint:'今月つくりたい習慣は？'},
+  {category:'opinion',level:'B2',text:'Should people study English every day? Share your opinion.',hint:'英語は毎日勉強すべき？意見を。'}
+];
+// 地域別イディオム（定期的に出題・添削に織り込む）
+const IDIOMS=[
+  {region:'US',expression:"a piece of cake",meaning:'とても簡単なこと',example:'The test was a piece of cake.'},
+  {region:'US',expression:"hit the books",meaning:'猛勉強する',example:"I need to hit the books tonight."},
+  {region:'US',expression:"my bad",meaning:'ごめん（私のミス）',example:'My bad, I forgot to reply.'},
+  {region:'US',expression:"ballpark figure",meaning:'おおよその数字',example:'Just give me a ballpark figure.'},
+  {region:'CA',expression:"double-double",meaning:'コーヒー（砂糖2・クリーム2）',example:"I'll grab a double-double, eh?"},
+  {region:'CA',expression:"toque",meaning:'ニット帽',example:"Don't forget your toque, it's cold."},
+  {region:'CA',expression:"give'r",meaning:'全力でやる',example:"Just give'r and finish it!"},
+  {region:'CA',expression:"keener",meaning:'熱心すぎる人・ガリ勉',example:'He’s such a keener in class.'},
+  {region:'UK',expression:"knackered",meaning:'へとへとに疲れた',example:"I'm absolutely knackered today."},
+  {region:'UK',expression:"chuffed",meaning:'とても満足・うれしい',example:"I'm dead chuffed with my score."},
+  {region:'UK',expression:"cheeky",meaning:'ちゃっかり・生意気な',example:'Fancy a cheeky coffee?'},
+  {region:'UK',expression:"gutted",meaning:'がっかりした',example:'I was gutted we lost.'},
+  {region:'AU',expression:"arvo",meaning:'午後',example:"See you this arvo."},
+  {region:'AU',expression:"heaps",meaning:'たくさん／とても',example:'Thanks heaps for your help!'},
+  {region:'AU',expression:"no worries",meaning:'問題ないよ／どういたしまして',example:'No worries, mate.'},
+  {region:'AU',expression:"brekkie",meaning:'朝食',example:'What did you have for brekkie?'}
+];
+
+/* ---------- 状態 ---------- */
+let profile=store.get('profile',null);
+let history=store.get('history',[]);
+let vocab=store.get('vocab',[]);
+let stats=store.get('stats',{streak:0,lastDay:null,totalAnswered:0});
+let currentQ=null, reviewFilter='all', reviewSearch='';
+
+const DEFAULT_PROFILE={
+  name:'', level:'A2',
+  interests:['daily','food','hobby'],
+  regions:['US','CA','UK','AU'],
+  gatedApps:['instagram','x','tiktok','youtube'],
+  skipAllowed:false, notify:true, aiRatio:0.4
+};
+
+/* =======================================================================
+   設定 / オンボーディング
+   ======================================================================= */
+let setupDraft=null;
+function renderSetup(){
+  setupDraft=JSON.parse(JSON.stringify(profile||DEFAULT_PROFILE));
+  $('#setup-form').innerHTML=settingsFormHTML(setupDraft,'setupDraft');
+  bindSettingsForm('setupDraft');
+}
+function settingsFormHTML(d,scope){
+  return `
+  <label class="fld"><span>ニックネーム（任意）</span>
+    <input type="text" class="in" data-bind="name" value="${esc(d.name)}" placeholder="例: Kouji"></label>
+
+  <div class="fld"><span style="display:block;font-size:.78rem;font-weight:700;color:var(--ink-soft);margin-bottom:6px">あなたの英語レベル<br><small class="muted" style="font-weight:400">わからなければ「自分に近いかも」と感じるものでOK。後からいつでも変えられます。</small></span>
+    <div data-radio="level">
+      ${LEVELS.map(l=>{const info=LEVEL_INFO[l];return `<button type="button" class="levelcard ${d.level===l?'on':''}" data-val="${l}">
+        <div class="lc-head"><span class="lc-badge">${l}</span><span class="lc-title">${esc(info.name)}</span></div>
+        <div class="lc-can">${esc(info.can)}</div>
+        <div class="lc-eg">Example: ${esc(info.eg)}</div>
+      </button>`}).join('')}
+    </div></div>
+
+  <div class="fld"><span style="display:block;font-size:.78rem;font-weight:700;color:var(--ink-soft);margin-bottom:6px">興味のあるテーマ（出題に反映）</span>
+    <div class="chips" data-multi="interests">
+      ${CATEGORIES.map(c=>`<button type="button" class="chip ${d.interests.includes(c.id)?'on':''}" data-val="${c.id}">${c.name}</button>`).join('')}
+    </div></div>
+
+  <div class="fld"><span style="display:block;font-size:.78rem;font-weight:700;color:var(--ink-soft);margin-bottom:6px">学びたい英語の地域（イディオムを定期的に出題）</span>
+    <div class="chips" data-multi="regions">
+      ${REGIONS.map(r=>`<button type="button" class="chip ${d.regions.includes(r.id)?'on':''}" data-val="${r.id}">${regionCode(r.id)} ${r.name}</button>`).join('')}
+    </div></div>
+
+  <div class="fld"><span style="display:block;font-size:.78rem;font-weight:700;color:var(--ink-soft);margin-bottom:6px">ロックの対象アプリ（開くたびに出題されます）</span>
+    <div class="chips" data-multi="gatedApps">
+      ${SNS_APPS.map(a=>`<button type="button" class="chip ${d.gatedApps.includes(a.id)?'on':''}" data-val="${a.id}">${a.name}</button>`).join('')}
+    </div></div>
+
+  <div class="fld" style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px">
+    <span style="font-size:.84rem;font-weight:700;color:var(--ink)">「あとで」ボタンを使えるようにする<br><small class="muted" style="font-weight:400">ONにすると、答えずにスキップできます（強制力は下がります）</small></span>
+    <label class="tgl"><input type="checkbox" data-bind="skipAllowed" ${d.skipAllowed?'checked':''}><span class="track"><span class="thumb"></span></span></label>
+  </div>
+  <div class="fld" style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:4px">
+    <span style="font-size:.84rem;font-weight:700;color:var(--ink)">学習リマインド通知<br><small class="muted" style="font-weight:400">本番では「今日の1問」を定期通知（プロトでは表示のみ）</small></span>
+    <label class="tgl"><input type="checkbox" data-bind="notify" ${d.notify?'checked':''}><span class="track"><span class="thumb"></span></span></label>
+  </div>`;
+}
+function bindSettingsForm(scope){
+  const root=scope==='setupDraft'?$('#setup-form'):$('#settings-form');
+  const d=scope==='setupDraft'?setupDraft:profile;
+  root.querySelectorAll('[data-bind]').forEach(el=>{
+    el.addEventListener(el.type==='checkbox'?'change':'input',()=>{
+      d[el.dataset.bind]=el.type==='checkbox'?el.checked:el.value;
+    });
+  });
+  root.querySelectorAll('[data-radio]').forEach(group=>{
+    const key=group.dataset.radio;
+    group.querySelectorAll('[data-val]').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        d[key]=btn.dataset.val;
+        group.querySelectorAll('[data-val]').forEach(b=>b.classList.toggle('on',b===btn));
+      });
+    });
+  });
+  root.querySelectorAll('[data-multi]').forEach(group=>{
+    const key=group.dataset.multi;
+    group.querySelectorAll('.chip').forEach(chip=>{
+      chip.addEventListener('click',()=>{
+        const v=chip.dataset.val;const arr=d[key];const i=arr.indexOf(v);
+        if(i>=0)arr.splice(i,1);else arr.push(v);
+        chip.classList.toggle('on');
+      });
+    });
+  });
+}
+function completeSetup(){
+  if(setupDraft.interests.length===0){toast('興味のあるテーマを1つ以上選んでください');return;}
+  if(setupDraft.gatedApps.length===0){toast('ロック対象アプリを1つ以上選んでください');return;}
+  profile=setupDraft; store.set('profile',profile);
+  $('#setup').style.display='none'; $('#app').style.display='block';
+  renderAll(); toast('設定完了。対象アプリを開いて英語を始めましょう');
+}
+
+/* =======================================================================
+   ナビゲーション
+   ======================================================================= */
+function nav(view){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  $('#v-'+view).classList.add('active');
+  document.querySelectorAll('.bnav').forEach(b=>b.classList.toggle('active',b.dataset.nav===view));
+  if(view==='home')renderHome();
+  if(view==='review')renderReview();
+  if(view==='vocab')renderVocab();
+  if(view==='progress')renderProgress();
+  if(view==='settings')renderSettings();
+  window.scrollTo(0,0);
+}
+function renderAll(){renderHome();renderTopStreak();}
+function renderTopStreak(){
+  $('#topStreak').innerHTML=`<span class="label">Streak</span><span>${stats.streak}日</span>`;
+}
+
+/* =======================================================================
+   ホーム
+   ======================================================================= */
+function renderHome(){
+  const name=profile.name?profile.name:'あなた';
+  const today=history.filter(h=>sameDay(h.createdAt,new Date())).length;
+  const avg=history.length?Math.round(history.reduce((s,h)=>s+h.score,0)/history.length):'—';
+  const weak=weakPoints();
+  $('#v-home').innerHTML=`
+    <div class="hero">
+      <div class="hero-greet">今日の英語アウトプット</div>
+      <div class="hero-name">${esc(name)} さん</div>
+      <div class="hero-stats">
+        <div class="hstat"><div class="n gold">${stats.streak}</div><div class="l">連続日数</div></div>
+        <div class="hstat"><div class="n">${today}</div><div class="l">今日の回答</div></div>
+        <div class="hstat"><div class="n">${avg}</div><div class="l">平均スコア</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="bar"></span>対象アプリ（タップで体験）</div>
+      <p class="phone-note">ロック対象のアプリを開こうとすると<b>英語1問</b>が出ます。答えると解除されます（本番のiOSでは Screen Time のシールドで再現）。</p>
+      <div class="appgrid">
+        ${SNS_APPS.map(a=>{const gated=profile.gatedApps.includes(a.id);return `
+          <button class="appicon" onclick="${gated?`openApp('${a.id}')`:`toast('「${a.name}」はロック対象外です')`}">
+            <span class="ic" style="background:${a.bg};color:#fff">${appIconHTML(a)}</span>
+            ${gated?`<span class="lockbadge">${icon('lock')}</span>`:''}
+            <span>${a.name}</span>
+          </button>`}).join('')}
+      </div>
+    </div>
+
+    <button class="btn btn-primary btn-block" style="margin-bottom:16px" onclick="openApp(null)">${icon('edit')} 今すぐ1問やってみる</button>
+
+    <div class="card">
+      <div class="card-title"><span class="bar"></span>あなたの弱点 TOP3</div>
+      ${weak.length?weak.map(w=>`<div class="weak-row"><span class="cnt">${w.count}</span><span class="nm">${esc(w.label)}</span><span class="tag tag-gray">${w.typeName}</span></div>`).join('')
+        :'<div class="empty">まだデータがありません。まずは1問答えてみましょう。</div>'}
+    </div>`;
+  renderTopStreak();
+}
+
+/* =======================================================================
+   出題ロジック（ハイブリッド：バンク＋AI生成風＋弱点）
+   ======================================================================= */
+function pickQuestion(){
+  // 興味＆レベル近傍で絞り込み
+  const lvIdx=LEVELS.indexOf(profile.level);
+  let pool=QUESTIONS.filter(q=>profile.interests.includes(q.category) && Math.abs(LEVELS.indexOf(q.level)-lvIdx)<=1);
+  if(pool.length<4)pool=QUESTIONS.slice();
+  // 直近に出した質問を避ける
+  const recent=history.slice(0,5).map(h=>h.questionText);
+  let cand=pool.filter(q=>!recent.includes(q.text));
+  if(cand.length===0)cand=pool;
+  // aiRatio の確率で「AI生成風」の質問を合成
+  if(Math.random()<(profile.aiRatio??0.4)){
+    const g=aiStyleQuestion();
+    if(g)return g;
+  }
+  const q=cand[Math.floor(Math.random()*cand.length)];
+  return {...q,source:'bank'};
+}
+function aiStyleQuestion(){
+  // 弱点や興味に合わせて生成した風（プロトはテンプレ）。本番はGeminiで生成。
+  const cat=profile.interests[Math.floor(Math.random()*profile.interests.length)]||'daily';
+  const templates={
+    daily:['Tell me about one small thing that made today good.','What is something you want to finish before tonight?'],
+    food:['Describe your perfect breakfast in three sentences.','What food do you want to try someday, and why?'],
+    work:['What is one skill you want to improve for work?','Explain your morning routine before work.'],
+    hobby:['What hobby could you talk about for an hour? Tell me a little.','What did you create or make recently?'],
+    travel:['If you had a free ticket anywhere, where would you go first?','Describe a place in your town a visitor should see.'],
+    feelings:['What is on your mind right now? Try to explain it in English.','What are you grateful for today?'],
+    opinion:['Is it better to plan everything or be flexible? Why?','What advice would you give your past self?']
+  };
+  const arr=templates[cat]||templates.daily;
+  return {category:cat,level:profile.level,text:arr[Math.floor(Math.random()*arr.length)],hint:'（AI生成風の質問）自由に英作文してみましょう。',source:'ai'};
+}
+function pickIdiom(){
+  const regs=profile.regions.length?profile.regions:REGIONS.map(r=>r.id);
+  const pool=IDIOMS.filter(i=>regs.includes(i.region));
+  return (pool.length?pool:IDIOMS)[Math.floor(Math.random()*(pool.length?pool.length:IDIOMS.length))];
+}
+
+/* =======================================================================
+   ロック画面：出題 → 回答 → 添削
+   ======================================================================= */
+let lockTriggerApp=null;
+function openApp(appId){
+  lockTriggerApp=appId?SNS_APPS.find(a=>a.id===appId):null;
+  currentQ=pickQuestion();
+  renderLockQuestion();
+  $('#lock').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function renderLockQuestion(){
+  const q=currentQ;
+  const showIdiom=(stats.totalAnswered%3===0); // 定期的に地域イディオムのワンポイント
+  const idiom=showIdiom?pickIdiom():null;
+  const trig=lockTriggerApp?`${esc(lockTriggerApp.name)} を開くには`:'今日の1問';
+  $('#lock-inner').innerHTML=`
+    <div class="lock-top">
+      <span class="lock-locktag">${icon('lock')} ${trig}</span>
+      ${profile.skipAllowed?`<button class="lock-skip" onclick="skipLock()">あとで</button>`:''}
+    </div>
+    ${idiom?`<div class="idiom-card">
+      <div class="hd">${regionCode(idiom.region)} 今日のワンポイント・イディオム（${REGION[idiom.region].name}）</div>
+      <div class="ex">${esc(idiom.expression)}</div>
+      <div class="mn">${esc(idiom.meaning)}</div>
+      <div class="eg">e.g. ${esc(idiom.example)}</div>
+    </div>`:''}
+    <div class="q-card">
+      <div class="q-meta">
+        <span class="tag tag-teal">${CAT_NAME[q.category]||q.category}</span>
+        <span class="tag tag-navy">${q.level}</span>
+        <span class="tag ${q.source==='ai'?'tag-lav':'tag-gray'}">${q.source==='ai'?'AI生成':'質問バンク'}</span>
+      </div>
+      <div class="q-text">${esc(q.text)}</div>
+      <button class="q-hint-btn" id="hintBtn" onclick="document.getElementById('hintTxt').classList.toggle('hide');this.classList.add('hide')">${icon('hint')} 日本語のヒントを見る</button>
+      <div class="q-hint hide" id="hintTxt">${esc(q.hint)}</div>
+      <div class="q-form">
+        <textarea class="in" id="answerBox" placeholder="英語で答えてみましょう（短くてOK）..."></textarea>
+      </div>
+    </div>
+    <div class="lock-actions">
+      <button class="btn btn-primary btn-block" id="submitBtn" onclick="submitAnswer()">${icon('unlock')} 添削して解除する</button>
+    </div>
+    <div class="lock-foot">答えると ${lockTriggerApp?esc(lockTriggerApp.name):'アプリ'} が開けます（プロトのデモ）</div>`;
+  setTimeout(()=>{const a=$('#answerBox');if(a)a.focus();},120);
+}
+function skipLock(){closeLock();toast('「あとで」を選びました（対象アプリを開けます）');}
+function closeLock(){$('#lock').classList.remove('open');document.body.style.overflow='';lockTriggerApp=null;}
+
+async function submitAnswer(){
+  const ans=$('#answerBox').value.trim();
+  if(ans.length<2){toast('英語で回答を入力してください');return;}
+  // ローディング表示
+  $('#lock-inner').innerHTML=`<div class="loading-wrap"><div class="spinner"></div><div style="font-weight:700">AIが添削しています...</div><div style="font-size:.78rem;opacity:.85">文法・単語・ネイティブ表現をチェック中</div></div>`;
+  const fb=await fetchFeedback({question:currentQ,answer:ans,profile});
+  // 保存
+  const rec={id:'h_'+Date.now(),questionText:currentQ.text,category:currentQ.category,level:currentQ.level,answer:ans,feedback:fb,score:fb.score,createdAt:new Date().toISOString()};
+  history.unshift(rec);store.set('history',history);
+  updateStreak();
+  renderLockResult(rec);
+}
+
+/* === AI添削の接続ポイント =================================================
+   本番では下記 fetchFeedback() を「サーバーレス関数経由でGeminiを呼ぶ」実装に
+   差し替える。APIキーはクライアントに置かず、サーバ側の環境変数で保持すること。
+   例: return await (await fetch('/api/correct',{method:'POST',
+        headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})).json();
+   ======================================================================== */
+async function fetchFeedback(payload){
+  await sleep(1100); // モックの疑似遅延
+  return buildMockFeedback(payload);
+}
+
+/* モック添削エンジン（簡易ヒューリスティック＋テンプレ） */
+function buildMockFeedback({question,answer,profile}){
+  let a=answer.trim();
+  let corrected=a;
+  const issues=[];
+  const add=(type,from,to,ex)=>issues.push({type,from,to,ex});
+
+  // 文頭の大文字化
+  if(/^[a-z]/.test(corrected)){const w0=corrected.split(/\s/)[0];corrected=corrected.charAt(0).toUpperCase()+corrected.slice(1);add('grammar',w0,corrected.split(/\s/)[0],'英文の文頭は大文字で始めます。');}
+  // 一人称 i → I
+  if(/\bi\b/.test(corrected)){corrected=corrected.replace(/\bi\b/g,'I');add('grammar','i','I','一人称の「私」は文中でも常に大文字の I です。');}
+  // よくある綴り/短縮形
+  const sp=[[/\bdont\b/gi,"don't","短縮形には ' が必要です。"],[/\bcant\b/gi,"can't","短縮形には ' が必要です。"],[/\bdoesnt\b/gi,"doesn't","短縮形には ' が必要です。"],[/\bim\b/gi,"I'm","「私は〜」は I'm と書きます。"],[/\balot\b/gi,"a lot","「たくさん」は a lot（2語）。alot は誤りです。"],[/\bvery much\b/gi,"a lot","会話では very much より a lot が自然なことが多いです。"]];
+  for(const [re,to,ex] of sp){const m=corrected.match(re);if(m){add('spelling',m[0],to,ex);corrected=corrected.replace(re,to);}}
+  // 弱い形容詞 → 言い換え提案（修正ではなく suggestion 側で扱う）
+  const suggestions=[];
+  const weakAdj=corrected.match(/\bvery (good|nice|big|happy|tired|tasty|delicious)\b/i);
+  if(weakAdj){
+    const map={good:'great / excellent',nice:'wonderful / lovely',big:'huge / enormous',happy:'thrilled / delighted',tired:'exhausted / worn out',tasty:'delicious / mouth-watering',delicious:'amazing / heavenly'};
+    const base=weakAdj[1].toLowerCase();
+    suggestions.push({expression:`${map[base]||'…'}（"very ${base}" の代わりに）`,note:'強い形容詞1語にすると、よりネイティブらしく引き締まります。'});
+  }
+  // 文末ピリオド
+  if(corrected && !/[.!?]$/.test(corrected)){corrected+='.';add('naturalness','(文末)','. ','英文の終わりにはピリオドを付けましょう。');}
+
+  // カテゴリ別のネイティブ表現サジェスト
+  const byCat={
+    food:[{expression:'grab a bite',note:'「軽く食べる」のカジュアルな言い方。'},{expression:'I’m craving ~',note:'「無性に〜が食べたい」。'}],
+    daily:[{expression:'I ended up ~ing',note:'「結局〜することになった」。自然な日常表現。'},{expression:'first thing in the morning',note:'「朝いちばんに」。'}],
+    work:[{expression:'on my plate',note:'「抱えているタスク」。I have a lot on my plate.'},{expression:'touch base',note:'「軽く連絡を取り合う」。'}],
+    hobby:[{expression:'I’m really into ~',note:'「〜にハマっている」。'},{expression:'in my free time',note:'「空き時間に」。'}],
+    travel:[{expression:'off the beaten path',note:'「定番から外れた穴場の」。'},{expression:'a must-see',note:'「絶対見るべき場所」。'}],
+    feelings:[{expression:'It made my day',note:'「一日が幸せになった」。'},{expression:'I’m a bit under the weather',note:'「少し体調が悪い」。'}],
+    opinion:[{expression:'In my opinion, ~',note:'意見を述べる定番の出だし。'},{expression:'It depends on ~',note:'「〜による」。便利な一言。'}]
+  };
+  (byCat[question.category]||byCat.daily).slice(0,2).forEach(s=>suggestions.push(s));
+
+  // 語彙提案
+  const vocabByCat={
+    food:[{word:'leftovers',meaning:'残り物',example:'I had leftovers for lunch.'},{word:'homemade',meaning:'自家製の',example:'This is a homemade sauce.'}],
+    daily:[{word:'routine',meaning:'日課',example:'It’s part of my daily routine.'},{word:'errand',meaning:'用事・お使い',example:'I ran a few errands today.'}],
+    work:[{word:'deadline',meaning:'締め切り',example:'The deadline is tomorrow.'},{word:'priority',meaning:'優先事項',example:'That’s my top priority.'}],
+    hobby:[{word:'fascinating',meaning:'とても興味深い',example:'The story was fascinating.'},{word:'pastime',meaning:'娯楽・趣味',example:'Reading is my favorite pastime.'}],
+    travel:[{word:'itinerary',meaning:'旅程',example:'Here’s our itinerary for the trip.'},{word:'scenery',meaning:'景色',example:'The scenery was breathtaking.'}],
+    feelings:[{word:'overwhelmed',meaning:'いっぱいいっぱいの',example:'I felt overwhelmed today.'},{word:'content',meaning:'満ち足りた',example:'I feel content right now.'}],
+    opinion:[{word:'productive',meaning:'生産的な',example:'I had a productive day.'},{word:'distraction',meaning:'気を散らすもの',example:'My phone is a big distraction.'}]
+  };
+  const vocab=(vocabByCat[question.category]||vocabByCat.daily).slice(0,2);
+
+  // 地域イディオム（約1/2の確率で付与＝定期的）
+  let region_idiom=null;
+  if(stats.totalAnswered%2===1){region_idiom=pickIdiom();}
+
+  // スコア算定
+  const wordCount=a.split(/\s+/).filter(Boolean).length;
+  let score=78-issues.length*6+Math.min(14,Math.max(0,wordCount-3)*2);
+  if(wordCount<3)score-=10;
+  score=Math.max(42,Math.min(98,score));
+  const level_estimate=score>=85?'B2':score>=72?'B1':score>=58?'A2':'A1';
+
+  const praises=['まず英語で書けたことが一番大事です！','伝えようとする姿勢がしっかり出ています。','短くても要点が伝わる良い回答です。','語順の基本ができています。'];
+  const praise=praises[wordCount%praises.length];
+  const summary=issues.length===0
+    ? '大きな間違いはありません。次はもう少し長く、具体例を1つ加えてみましょう。'
+    : `${issues.length}点の修正で、より自然な英語になります。特に${issues[0].type==='grammar'?'文法（大文字や I の使い方）':issues[0].type==='spelling'?'綴り・短縮形':'仕上げ（句読点など）'}を意識しましょう。`;
+
+  return {corrected,score,level_estimate,praise,summary,issues,suggestions:suggestions.slice(0,3),vocab,region_idiom};
+}
+
+function renderLockResult(rec){
+  const fb=rec.feedback;
+  const sc=rec.score;
+  const col=sc>=80?'var(--green)':sc>=60?'var(--navy)':'var(--orange-dark)';
+  const correctedHTML=highlightDiff(rec.answer,fb.corrected);
+  $('#lock-inner').innerHTML=`
+    <div class="lock-top"><span class="lock-locktag">${icon('check')} 添削完了</span></div>
+    <div class="res-scorebar">
+      <div class="score-ring" style="background:${col}"><span class="s">${sc}</span><span class="o">SCORE</span></div>
+      <div><div class="lvl">推定レベル ${fb.level_estimate}</div><div class="praise">${esc(fb.praise)}</div></div>
+    </div>
+
+    <div class="res-block">
+      <h4>${icon('edit')} 修正後の自然な英文</h4>
+      <div class="res-corrected">${correctedHTML}</div>
+      <div class="res-orig">あなたの回答: <s>${esc(rec.answer)}</s></div>
+    </div>
+
+    ${fb.issues.length?`<div class="res-block"><h4>${icon('search')} 文法・単語の補足</h4>
+      ${fb.issues.map(i=>`<div class="issue"><div class="ttl"><span class="from">${esc(i.from)}</span> → <span class="to">${esc(i.to)}</span> <span class="tag ${i.type==='grammar'?'tag-orange':i.type==='spelling'?'tag-red':'tag-gray'}" style="margin-left:4px">${({grammar:'文法',spelling:'綴り',usage:'語法',vocab:'語彙',naturalness:'自然さ'})[i.type]||i.type}</span></div><div class="ex">${esc(i.ex)}</div></div>`).join('')}
+    </div>`:''}
+
+    <div class="res-block"><h4>${icon('note')} 日本語のワンポイント解説</h4>
+      <div style="font-size:.86rem">${esc(fb.summary)}</div></div>
+
+    ${fb.suggestions.length?`<div class="res-block"><h4>${icon('trend')} ネイティブの言い回し</h4>
+      ${fb.suggestions.map(s=>`<div class="sugg"><div><div class="ex">${esc(s.expression)}</div><div class="nt">${esc(s.note)}</div></div></div>`).join('')}
+    </div>`:''}
+
+    ${fb.region_idiom?`<div class="res-block"><h4>${regionCode(fb.region_idiom.region)} ${REGION[fb.region_idiom.region].name}の地域イディオム</h4>
+      <div class="sugg"><div><div class="ex">${esc(fb.region_idiom.expression)}</div><div class="nt">${esc(fb.region_idiom.meaning)} ／ e.g. ${esc(fb.region_idiom.example)}</div></div></div>
+      <button class="vocab-line save" style="margin-top:8px" onclick="saveVocab(${esc(JSON.stringify({word:fb.region_idiom.expression,meaning:fb.region_idiom.meaning,example:fb.region_idiom.example,region:fb.region_idiom.region}))},this)">単語帳に保存</button></div>`:''}
+
+    ${fb.vocab.length?`<div class="res-block"><h4>${icon('book')} 覚えておきたい単語</h4>
+      ${fb.vocab.map(v=>`<div class="vocab-line"><span class="w">${esc(v.word)}</span><span class="m">${esc(v.meaning)}</span><button class="save" onclick="saveVocab(${esc(JSON.stringify(v))},this)">保存</button></div>`).join('')}
+    </div>`:''}
+
+    <div class="lock-actions" style="margin-top:8px">
+      <button class="btn btn-primary btn-block" onclick="finishLock()">${icon('unlock')} 解除して閉じる</button>
+    </div>
+    <div class="lock-foot">この内容は「復習」タブにいつでも残ります</div>`;
+  $('#lock').scrollTop=0;
+}
+function finishLock(){closeLock();const tn=lockTriggerApp; toast('解除しました。よくできました');renderAll();}
+function saveVocab(item,btn){
+  if(vocab.some(v=>v.word===item.word)){toast('すでに保存済みです');return;}
+  vocab.unshift({id:'v_'+Date.now(),...item,savedAt:new Date().toISOString()});
+  store.set('vocab',vocab);
+  if(btn){btn.classList.add('done');btn.textContent='保存済み';}
+  toast('単語帳に保存しました');
+}
+
+/* 単純な単語レベル差分ハイライト（修正後で変わった語を強調） */
+function highlightDiff(orig,corr){
+  const o=new Set(orig.toLowerCase().replace(/[.,!?]/g,'').split(/\s+/));
+  return esc(corr).split(/(\s+)/).map(tok=>{
+    const clean=tok.toLowerCase().replace(/[.,!?]/g,'');
+    if(clean && !o.has(clean) && /\w/.test(clean))return `<mark>${tok}</mark>`;
+    return tok;
+  }).join('');
+}
+
+/* =======================================================================
+   ストリーク / 弱点
+   ======================================================================= */
+function sameDay(iso,d){const a=new Date(iso);return a.getFullYear()===d.getFullYear()&&a.getMonth()===d.getMonth()&&a.getDate()===d.getDate();}
+function updateStreak(){
+  stats.totalAnswered++;
+  const t=todayStr();
+  if(stats.lastDay!==t){
+    const y=new Date();y.setDate(y.getDate()-1);
+    const ys=y.getFullYear()+'-'+(y.getMonth()+1)+'-'+y.getDate();
+    stats.streak=(stats.lastDay===ys)?stats.streak+1:1;
+    stats.lastDay=t;
+  }
+  if(stats.streak===0)stats.streak=1;
+  store.set('stats',stats);
+}
+function weakPoints(){
+  const m={};
+  history.forEach(h=>h.feedback.issues.forEach(i=>{
+    const key=i.type;m[key]=(m[key]||0)+1;
+  }));
+  const names={grammar:'文法（大文字・I など）',spelling:'綴り・短縮形',naturalness:'句読点・仕上げ',usage:'語法',vocab:'語彙'};
+  return Object.entries(m).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([t,c])=>({label:names[t]||t,typeName:({grammar:'文法',spelling:'綴り',naturalness:'仕上げ',usage:'語法',vocab:'語彙'})[t]||t,count:c}));
+}
+
+/* =======================================================================
+   復習 / 履歴
+   ======================================================================= */
+function renderReview(){
+  const cats=['all',...CATEGORIES.map(c=>c.id)];
+  let items=history.slice();
+  if(reviewFilter!=='all')items=items.filter(h=>h.category===reviewFilter);
+  if(reviewSearch)items=items.filter(h=>(h.questionText+' '+h.answer).toLowerCase().includes(reviewSearch.toLowerCase()));
+  $('#v-review').innerHTML=`
+    <h1 class="page-title"><span class="en-label">Review</span>復習</h1>
+    <p class="page-desc">過去の出題・あなたの回答・添削をすべて見返せます。</p>
+    <input type="text" class="in" placeholder="質問や回答で検索" value="${esc(reviewSearch)}" oninput="reviewSearch=this.value;renderReviewList()" style="margin-bottom:12px">
+    <div class="filterbar" id="reviewFilters">
+      ${cats.map(c=>`<button class="chip ${reviewFilter===c?'on':''}" onclick="reviewFilter='${c}';renderReview()">${c==='all'?'すべて':CAT_NAME[c]}</button>`).join('')}
+    </div>
+    <div id="reviewList"></div>`;
+  renderReviewList();
+}
+function renderReviewList(){
+  let items=history.slice();
+  if(reviewFilter!=='all')items=items.filter(h=>h.category===reviewFilter);
+  if(reviewSearch)items=items.filter(h=>(h.questionText+' '+h.answer).toLowerCase().includes(reviewSearch.toLowerCase()));
+  const el=$('#reviewList');if(!el)return;
+  el.innerHTML=items.length?items.map(h=>{
+    const col=h.score>=80?'var(--green)':h.score>=60?'var(--navy)':'var(--orange-dark)';
+    return `<div class="hist-item" onclick="openHistory('${h.id}')">
+      <div class="hist-score" style="background:${col}">${h.score}</div>
+      <div class="hist-body">
+        <div class="hist-q">${esc(h.questionText)}</div>
+        <div class="hist-a">${esc(h.answer)}</div>
+        <div class="hist-meta"><span class="tag tag-teal">${CAT_NAME[h.category]||h.category}</span><span>${fmtDateTime(h.createdAt)}</span></div>
+      </div></div>`;
+  }).join(''):'<div class="empty">まだ履歴がありません。対象アプリを開いて1問答えてみましょう。</div>';
+}
+function openHistory(id){
+  const h=history.find(x=>x.id===id);if(!h)return;
+  const fb=h.feedback;
+  showModal(`
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px"><span class="tag tag-teal">${CAT_NAME[h.category]}</span><span class="tag tag-navy">${h.level}</span><span class="tag tag-gray">${fmtDateTime(h.createdAt)}</span></div>
+    <div class="q-text" style="font-size:1.05rem;margin-bottom:10px">${esc(h.questionText)}</div>
+    <div class="res-block" style="box-shadow:none;border:1.5px solid var(--line)"><h4>あなたの回答</h4><div class="en" style="font-size:.92rem">${esc(h.answer)}</div></div>
+    <div class="res-block" style="box-shadow:none;border:1.5px solid var(--line)"><h4>${icon('edit')} 修正後</h4><div class="res-corrected">${highlightDiff(h.answer,fb.corrected)}</div></div>
+    ${fb.issues.length?`<div class="res-block" style="box-shadow:none;border:1.5px solid var(--line)"><h4>${icon('search')} 文法・単語の補足</h4>${fb.issues.map(i=>`<div class="issue"><div class="ttl"><span class="from">${esc(i.from)}</span> → <span class="to">${esc(i.to)}</span></div><div class="ex">${esc(i.ex)}</div></div>`).join('')}</div>`:''}
+    <div class="res-block" style="box-shadow:none;border:1.5px solid var(--line)"><h4>${icon('note')} 解説</h4><div style="font-size:.86rem">${esc(fb.summary)}</div></div>
+    ${fb.suggestions.length?`<div class="res-block" style="box-shadow:none;border:1.5px solid var(--line)"><h4>${icon('trend')} ネイティブの言い回し</h4>${fb.suggestions.map(s=>`<div class="sugg"><div><div class="ex">${esc(s.expression)}</div><div class="nt">${esc(s.note)}</div></div></div>`).join('')}</div>`:''}
+    <button class="btn btn-ghost btn-block" onclick="closeModal()">閉じる</button>`);
+}
+
+/* =======================================================================
+   単語・表現帳
+   ======================================================================= */
+function renderVocab(){
+  $('#v-vocab').innerHTML=`
+    <h1 class="page-title"><span class="en-label">My Words</span>単語・表現帳</h1>
+    <p class="page-desc">添削で保存した単語やイディオム。カードをタップすると意味を隠して復習できます（フラッシュカード）。</p>
+    ${vocab.length?`<div class="vgrid">${vocab.map(v=>`
+      <div class="vcard" onclick="this.classList.toggle('flip')">
+        ${v.region?`<span class="region">${regionCode(v.region)}</span>`:''}
+        <div class="w">${esc(v.word)}</div>
+        <div class="m">${esc(v.meaning)}</div>
+        ${v.example?`<div class="eg">${esc(v.example)}</div>`:''}
+        <button class="del" onclick="event.stopPropagation();removeVocab('${v.id}')">削除</button>
+      </div>`).join('')}</div>`:'<div class="empty">まだ保存した単語がありません。添削画面の「保存」から追加できます。</div>'}`;
+}
+function removeVocab(id){vocab=vocab.filter(v=>v.id!==id);store.set('vocab',vocab);renderVocab();toast('削除しました');}
+
+/* =======================================================================
+   進捗
+   ======================================================================= */
+function renderProgress(){
+  const total=history.length;
+  const avg=total?Math.round(history.reduce((s,h)=>s+h.score,0)/total):0;
+  const lvIdx=avg>=85?4:avg>=72?3:avg>=58?2:avg>=48?1:0;
+  const recent=history.slice(0,12).reverse();
+  const maxS=100;
+  $('#v-progress').innerHTML=`
+    <h1 class="page-title"><span class="en-label">Progress</span>進捗</h1>
+    <p class="page-desc">続けるほど伸びます。毎日の1問が積み上がります。</p>
+
+    <div class="hero" style="margin-bottom:16px">
+      <div class="hero-stats">
+        <div class="hstat"><div class="n gold">${stats.streak}</div><div class="l">連続日数</div></div>
+        <div class="hstat"><div class="n">${stats.totalAnswered}</div><div class="l">累計回答</div></div>
+        <div class="hstat"><div class="n">${total?avg:'—'}</div><div class="l">平均スコア</div></div>
+        <div class="hstat"><div class="n">${vocab.length}</div><div class="l">保存単語</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="bar"></span>推定レベル</div>
+      <div class="steps">
+        ${LEVELS.map((l,i)=>`<div class="step ${i<lvIdx?'done':i===lvIdx?'current':''}"><div class="dot">${l}</div><div class="lbl">${({A1:'入門',A2:'初級',B1:'中級',B2:'中上級',C1:'上級'})[l]}</div></div>`).join('')}
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="bar"></span>直近のスコア推移</div>
+      ${recent.length?`<div class="spark">
+        ${recent.map(h=>`<div class="bar" style="height:${Math.max(6,h.score/maxS*100)}%"><span>${h.score}</span></div>`).join('')}
+      </div><div class="spark-x">${recent.map(h=>{const d=new Date(h.createdAt);return `<div>${d.getMonth()+1}/${d.getDate()}</div>`}).join('')}</div>`
+      :'<div class="empty">回答するとスコアの推移が表示されます。</div>'}
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="bar"></span>テーマ別の回答数</div>
+      ${total?CATEGORIES.filter(c=>history.some(h=>h.category===c.id)).map(c=>{
+        const n=history.filter(h=>h.category===c.id).length;const pct=Math.round(n/total*100);
+        return `<div class="weak-row"><span class="nm">${c.name}</span><div style="flex:2;height:8px;border-radius:4px;background:var(--line);overflow:hidden;margin:0 8px"><div style="height:100%;width:${pct}%;background:linear-gradient(90deg,var(--teal),var(--navy))"></div></div><span class="en muted" style="font-size:.74rem;width:30px;text-align:right">${n}</span></div>`;
+      }).join(''):'<div class="empty">まだデータがありません。</div>'}
+    </div>`;
+}
+
+/* =======================================================================
+   設定（編集）
+   ======================================================================= */
+function renderSettings(){
+  $('#v-settings').innerHTML=`
+    <h1 class="page-title"><span class="en-label">Settings</span>設定</h1>
+    <p class="page-desc">いつでも変更できます。変更後は「保存」を押してください。</p>
+    <div class="card" id="settings-form">${settingsFormHTML(profile,'profile')}</div>
+    <button class="btn btn-primary btn-block" onclick="saveSettings()" style="margin-bottom:12px">設定を保存する</button>
+    <button class="btn btn-ghost btn-block" onclick="resetData()" style="border-color:var(--red);color:var(--red)">データを初期化する（デモ用）</button>`;
+  bindSettingsForm('profile');
+}
+function saveSettings(){
+  if(profile.interests.length===0){toast('興味のあるテーマを1つ以上選んでください');return;}
+  if(profile.gatedApps.length===0){toast('ロック対象アプリを1つ以上選んでください');return;}
+  store.set('profile',profile);toast('設定を保存しました');renderAll();
+}
+function resetData(){
+  showModal(`<div class="card-title"><span class="bar"></span>データを初期化しますか？</div>
+    <p class="muted" style="font-size:.86rem;margin-bottom:16px">すべての履歴・単語・設定が消え、最初の設定画面に戻ります（デモ用）。</p>
+    <div style="display:flex;gap:10px"><button class="btn btn-ghost" style="flex:1" onclick="closeModal()">やめる</button>
+    <button class="btn btn-primary" style="flex:1;background:var(--red)" onclick="doReset()">初期化する</button></div>`);
+}
+function doReset(){localStorage.removeItem(NS+'.profile');localStorage.removeItem(NS+'.history');localStorage.removeItem(NS+'.vocab');localStorage.removeItem(NS+'.stats');location.reload();}
+
+/* =======================================================================
+   初期化
+   ======================================================================= */
+function boot(){
+  if(profile){$('#setup').style.display='none';$('#app').style.display='block';renderAll();}
+  else{renderSetup();}
+}
+boot();
+
+/* Service Worker 登録（オフライン対応・PWA化） */
+if('serviceWorker' in navigator){
+  window.addEventListener('load',function(){
+    navigator.serviceWorker.register('sw.js').catch(function(){});
+  });
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+# macOS
+.DS_Store
+**/.DS_Store
+
+# ローカル開発のみ（任意）
+.claude/settings.local.json
