@@ -1874,8 +1874,38 @@ async function submitAnswer(){
         headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})).json();
    ======================================================================== */
 async function fetchFeedback(payload){
-  await sleep(1100); // モックの疑似遅延
-  return buildMockFeedback(payload);
+  try{
+    const { data, error } = await sb.functions.invoke('correct', { body:{
+      question: payload.question.text,
+      answer: payload.answer,
+      level: (payload.profile&&payload.profile.level)||'A2',
+      regions: (payload.profile&&payload.profile.regions)||[]
+    }});
+    if(error) throw error;
+    if(data && data.corrected) return normalizeFeedback(data);
+    throw new Error(data && data.error ? data.error : 'no_corrected');
+  }catch(e){
+    console.warn('Gemini添削にフォールバックしました:', (e&&e.message)||e);
+    const fb=buildMockFeedback(payload);
+    fb.summary=(fb.summary||'')+'（※現在は簡易添削です。GeminiのAPIキーを設定すると、より自然な書き換えと詳しい解説になります）';
+    return fb;
+  }
+}
+// Geminiの応答を安全な形に整える（不正なイディオム地域などを弾く）
+function normalizeFeedback(d){
+  const ok={US:1,CA:1,UK:1,AU:1};
+  let ri=d.region_idiom;
+  if(!ri||!ri.region||!ok[ri.region]||!ri.expression) ri=null;
+  const arr=x=>Array.isArray(x)?x:[];
+  return {
+    corrected:String(d.corrected||''),
+    praise:String(d.praise||'よく書けています。'),
+    summary:String(d.summary||''),
+    issues:arr(d.issues).filter(i=>i&&i.from&&i.to).map(i=>({type:i.type||'grammar',from:String(i.from),to:String(i.to),ex:String(i.ex||'')})),
+    suggestions:arr(d.suggestions).filter(s=>s&&s.expression).map(s=>({expression:String(s.expression),note:String(s.note||'')})),
+    vocab:arr(d.vocab).filter(v=>v&&v.word).map(v=>({word:String(v.word),meaning:String(v.meaning||''),example:String(v.example||'')})),
+    region_idiom:ri?{region:ri.region,expression:String(ri.expression),meaning:String(ri.meaning||''),example:String(ri.example||'')}:null
+  };
 }
 
 /* モック添削エンジン（簡易ヒューリスティック＋テンプレ） */
