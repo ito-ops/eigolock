@@ -16,8 +16,9 @@
 
 本アプリはPWA対応済み（`manifest.json`＋`sw.js`＋アイコン）。**Safariで開く→共有→「ホーム画面に追加」**で、独自アイコン・全画面のアプリとして起動します。
 
-- **方法A（おすすめ・安定）**: GitHub Pages 等のHTTPSに公開 → そのURLをiPhoneのSafariで開く → ホーム画面に追加。HTTPSなのでオフライン（Service Worker）も有効。
-- **方法B（同じWi-Fiで今すぐ）**: Macで `node server.js` を起動 → Macの内部IP（`ipconfig getifaddr en0` で確認）→ iPhoneのSafariで `http://<MacのIP>:8123` を開く → ホーム画面に追加。※httpのためオフライン機能（SW）は無効、オンラインでは動作。
+- **方法A（おすすめ・安定／公開済み）**: **https://ito-ops.github.io/eigolock/** をiPhoneのSafariで開く → 共有 → 「ホーム画面に追加」。HTTPSなのでオフライン（Service Worker）も有効。
+  - リポジトリ: https://github.com/ito-ops/eigolock （`main` ブランチへの push で Pages が自動再ビルド）
+- **方法B（同じWi-Fiで今すぐ）**: Macで `node server.js` を起動 → iPhoneのSafariで `http://<MacのIP>:8123`（例: `http://172.30.5.21:8123`、IPは `ipconfig getifaddr en0` で確認）→ 「ホーム画面に追加」。※httpのためオフライン機能（SW）は無効、オンラインでは動作。
 
 ## 実装している体験（要件との対応）
 
