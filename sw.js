@@ -1,5 +1,5 @@
 // エイポン Service Worker — オフライン対応（アプリの殻をキャッシュ）
-const CACHE = 'eipon-v2';
+const CACHE = 'eipon-v3';
 const ASSETS = [
   './', './index.html', './manifest.json',
   './icons/icon-192.png', './icons/icon-512.png', './icons/apple-touch-icon.png'
