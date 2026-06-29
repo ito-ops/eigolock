@@ -1787,19 +1787,20 @@ function aiStyleQuestion(){
   // 弱点や興味に合わせて生成した風（プロトはテンプレ）。本番はGeminiで生成。
   const cat=profile.interests[Math.floor(Math.random()*profile.interests.length)]||'daily';
   const templates={
-    daily:['Tell me about one small thing that made today good.','What is something you want to finish before tonight?','Describe your morning in three sentences.'],
-    food:['Describe your perfect breakfast in three sentences.','What food do you want to try someday, and why?','If you could eat only one meal forever, what would it be?'],
-    work:['What is one skill you want to improve for work?','Explain your morning routine before work.','Describe a small win you had at work recently.'],
-    hobby:['What hobby could you talk about for an hour? Tell me a little.','What did you create or make recently?','What would you do with a totally free day?'],
-    travel:['If you had a free ticket anywhere, where would you go first?','Describe a place in your town a visitor should see.','What is the most beautiful place you have ever seen?'],
-    feelings:['What is on your mind right now? Try to explain it in English.','What are you grateful for today?','Describe your mood today in three words, then explain.'],
-    opinion:['Is it better to plan everything or be flexible? Why?','What advice would you give your past self?',"What is one thing schools should teach but usually don't?"],
-    study:['What helps you remember new English words?','Describe your ideal way to study English.','What is one English mistake you keep making?'],
-    health:['What is one healthy habit you are proud of?','How do you feel when you skip exercise?','Describe your perfect relaxing evening.'],
-    future:['What does your ideal weekend look like in five years?','What is one dream you have not given up on?','If money was not a problem, what would you do?']
+    daily:[{text:'Tell me about one small thing that made today good.',ja:'今日あった、ちょっと良かったことを1つ教えて。'},{text:'What is something you want to finish before tonight?',ja:'今夜までに終わらせたいことは？'},{text:'Describe your morning in three sentences.',ja:'今朝のことを3文で説明して。'}],
+    food:[{text:'Describe your perfect breakfast in three sentences.',ja:'理想の朝食を3文で説明して。'},{text:'What food do you want to try someday, and why?',ja:'いつか食べてみたい料理と、その理由は？'},{text:'If you could eat only one meal forever, what would it be?',ja:'一生1つの食事しか食べられないなら、何を選ぶ？'}],
+    work:[{text:'What is one skill you want to improve for work?',ja:'仕事のために伸ばしたいスキルは？'},{text:'Explain your morning routine before work.',ja:'仕事前の朝のルーティンを説明して。'},{text:'Describe a small win you had at work recently.',ja:'最近の仕事での小さな成功を教えて。'}],
+    hobby:[{text:'What hobby could you talk about for an hour? Tell me a little.',ja:'1時間語れる趣味は？少し教えて。'},{text:'What did you create or make recently?',ja:'最近作ったものは？'},{text:'What would you do with a totally free day?',ja:'完全に自由な1日があったら何をする？'}],
+    travel:[{text:'If you had a free ticket anywhere, where would you go first?',ja:'どこへでも行ける無料チケットがあったら、まずどこへ行く？'},{text:'Describe a place in your town a visitor should see.',ja:'旅行者に見せたい、あなたの町の場所を紹介して。'},{text:'What is the most beautiful place you have ever seen?',ja:'今まで見た中で一番美しい場所は？'}],
+    feelings:[{text:'What is on your mind right now? Try to explain it in English.',ja:'今、頭の中にあることは？英語で説明してみて。'},{text:'What are you grateful for today?',ja:'今日、感謝していることは？'},{text:'Describe your mood today in three words, then explain.',ja:'今日の気分を3語で表して、説明して。'}],
+    opinion:[{text:'Is it better to plan everything or be flexible? Why?',ja:'全部計画するのと柔軟にするの、どちらが良い？理由は？'},{text:'What advice would you give your past self?',ja:'過去の自分にどんなアドバイスをする？'},{text:"What is one thing schools should teach but usually don't?",ja:'学校が教えるべきなのに普通は教えないことは？'}],
+    study:[{text:'What helps you remember new English words?',ja:'新しい英単語を覚えるのに役立つことは？'},{text:'Describe your ideal way to study English.',ja:'理想の英語の勉強法を説明して。'},{text:'What is one English mistake you keep making?',ja:'いつもしてしまう英語のミスは？'}],
+    health:[{text:'What is one healthy habit you are proud of?',ja:'自慢できる健康習慣は？'},{text:'How do you feel when you skip exercise?',ja:'運動をサボるとどんな気分になる？'},{text:'Describe your perfect relaxing evening.',ja:'理想のくつろぐ夜を説明して。'}],
+    future:[{text:'What does your ideal weekend look like in five years?',ja:'5年後の理想の週末はどんな感じ？'},{text:'What is one dream you have not given up on?',ja:'まだ諦めていない夢は？'},{text:'If money was not a problem, what would you do?',ja:'お金が問題でないなら、何をする？'}]
   };
   const arr=templates[cat]||templates.daily;
-  return {category:cat,level:profile.level,text:arr[Math.floor(Math.random()*arr.length)],hint:'（AI生成風の質問）自由に英作文してみましょう。',source:'ai'};
+  const q=arr[Math.floor(Math.random()*arr.length)];
+  return {category:cat,level:profile.level,text:q.text,hint:q.ja,source:'ai'};
 }
 function pickIdiom(){
   const regs=profile.regions.length?profile.regions:REGIONS.map(r=>r.id);
@@ -1838,7 +1839,7 @@ function renderLockQuestion(){
         <span class="tag ${q.source==='ai'?'tag-lav':'tag-gray'}">${q.source==='ai'?'AI生成':'質問バンク'}</span>
       </div>
       <div class="q-text">${esc(q.text)}</div>
-      <button class="q-hint-btn" id="hintBtn" onclick="document.getElementById('hintTxt').classList.toggle('hide');this.classList.add('hide')">${icon('hint')} 日本語のヒントを見る</button>
+      <button class="q-hint-btn" id="hintBtn" onclick="document.getElementById('hintTxt').classList.toggle('hide');this.classList.add('hide')">${icon('hint')} 日本語訳を見る</button>
       <div class="q-hint hide" id="hintTxt">${esc(q.hint)}</div>
       <div class="q-form">
         <textarea class="in" id="answerBox" placeholder="英語で答えてみましょう（短くてOK）..."></textarea>
