@@ -1283,7 +1283,16 @@ select.in:focus{
   .btn-login:hover::after{animation:none}
 }
 </style>
-<div id="login">
+<style>
+#splash{position:fixed;inset:0;z-index:1200;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;background:linear-gradient(165deg,#eaf3f1 0%,#e4eef0 50%,#e9e6f4 100%)}
+#splash .splash-logo{font-family:var(--font-en,sans-serif);font-weight:800;font-size:2rem;color:var(--navy,#177e74);letter-spacing:-.02em}
+#splash .splash-logo .lock{color:var(--teal,#2cb5a3)}
+#splash .splash-spinner{width:34px;height:34px;border:4px solid rgba(23,126,116,.2);border-top-color:var(--teal,#2cb5a3);border-radius:50%;animation:splashspin .8s linear infinite}
+@keyframes splashspin{to{transform:rotate(360deg)}}
+</style>
+<div id="splash"><div class="splash-logo">エイ<span class="lock">ポン</span></div><div class="splash-spinner"></div></div>
+
+<div id="login" style="display:none">
   <div class="login-bg" aria-hidden="true">
     <span class="blob blob-a"></span>
     <span class="blob blob-b"></span>
@@ -2098,6 +2107,7 @@ const SB_KEY='sb_publishable_z2PoNToXRvffcVpVdHZmfA_4v8E72AV'; // publishable（
 let sb=null, authUser=null, memberNo=null;
 
 function showOnly(which){
+  const sp=$('#splash'); if(sp) sp.style.display='none';
   $('#login').style.display = which==='login'?'block':'none';
   $('#setup').style.display = which==='setup'?'block':'none';
   $('#app').style.display   = which==='app'?'block':'none';
@@ -2190,7 +2200,7 @@ async function logout(){ await sb.auth.signOut(); } // SIGNED_OUT → showLogin
    ======================================================================= */
 async function boot(){
   if(!window.supabase){ alert('オンライン接続が必要です（Supabaseの読み込みに失敗）'); return; }
-  sb = window.supabase.createClient(SB_URL, SB_KEY);
+  sb = window.supabase.createClient(SB_URL, SB_KEY, { auth:{ persistSession:true, autoRefreshToken:true } });
   sb.auth.onAuthStateChange((event, session)=>{
     // 注意: このコールバック内で直接 await して Supabase を呼ぶと
     // supabase-js の認証ロックとデッドロックする。setTimeout で外へ逃がす。
