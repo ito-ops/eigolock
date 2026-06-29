@@ -1,10 +1,15 @@
 // Gemini プロキシ：英作文を添削（自然な書き換え・詳しい解説・関連時のみイディオム）
 // APIキーは Supabase のシークレット GEMINI_API_KEY に保持（クライアント／公開リポジトリには出さない）。
-// デプロイ: Supabase MCP もしくは `supabase functions deploy correct`
-// シークレット設定: ダッシュボード → Project Settings → Edge Functions → Add new secret（GEMINI_API_KEY）
+// モデルは複数候補を順に試し、通ったものを使う（提供終了モデル対策）。GEMINI_MODEL で先頭候補を上書き可。
 
 const KEY = Deno.env.get("GEMINI_API_KEY");
-const MODEL = Deno.env.get("GEMINI_MODEL") || "gemini-2.0-flash";
+const MODELS = ((Deno.env.get("GEMINI_MODEL") ? [Deno.env.get("GEMINI_MODEL") as string] : []) as string[]).concat([
+  "gemini-2.5-flash-lite",
+  "gemini-flash-latest",
+  "gemini-2.5-flash",
+  "gemini-2.5-flash-latest",
+  "gemini-2.0-flash-001",
+]);
 
 const CORS = {
   "Access-Control-Allow-Origin": "*",
@@ -87,36 +92,68 @@ function buildPrompt(question: string, answer: string, level: string, regions: s
   ].join("\n");
 }
 
+async function callGemini(prompt: string) {
+  let lastErr: unknown = null;
+  for (const model of MODELS) {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 20000); // モデル毎に20秒で打ち切り→次へ
+    try {
+      const res = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${KEY}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          signal: ctrl.signal,
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }],
+            generationConfig: {
+              responseMimeType: "application/json",
+              responseSchema: SCHEMA,
+              temperature: 0.4,
+              thinkingConfig: { thinkingBudget: 0 }, // 思考モードOFFで高速化
+            },
+          }),
+        },
+      );
+      if (res.ok) return { ok: true as const, model, data: await res.json() };
+      const detail = (await res.text()).slice(0, 400);
+      lastErr = { model, status: res.status, detail };
+      if (res.status !== 404) break; // 404=モデル無し→次を試す。それ以外は中断
+    } catch (e) {
+      lastErr = { model, status: "timeout", detail: String(e) };
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+  return { ok: false as const, error: lastErr };
+}
+
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
   try {
     if (!KEY) return json({ error: "GEMINI_API_KEY_not_set" });
     const body = await req.json().catch(() => ({} as Record<string, unknown>));
+    if ((body as any)._listModels) {
+      const lm = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${KEY}`);
+      const j = await lm.json();
+      const names = (j.models || [])
+        .filter((m: any) => (m.supportedGenerationMethods || []).includes("generateContent"))
+        .map((m: any) => m.name);
+      return json({ models: names });
+    }
     const question = String((body as any).question || "");
     const answer = String((body as any).answer || "").trim();
     const level = String((body as any).level || "A2");
     const regions = (body as any).regions;
     if (!answer) return json({ error: "empty_answer" });
-    const res = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${KEY}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: buildPrompt(question, answer, level, regions) }] }],
-          generationConfig: { responseMimeType: "application/json", responseSchema: SCHEMA, temperature: 0.4 },
-        }),
-      },
-    );
-    if (!res.ok) {
-      const t = await res.text();
-      return json({ error: "gemini_error", status: res.status, detail: t.slice(0, 500) });
-    }
-    const data = await res.json();
-    const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-    if (!text) return json({ error: "no_text", detail: JSON.stringify(data).slice(0, 500) });
-    let fb: unknown;
+
+    const r = await callGemini(buildPrompt(question, answer, level, regions));
+    if (!r.ok) return json({ error: "gemini_error", ...(r.error as object) });
+    const text = r.data?.candidates?.[0]?.content?.parts?.[0]?.text;
+    if (!text) return json({ error: "no_text", detail: JSON.stringify(r.data).slice(0, 500) });
+    let fb: any;
     try { fb = JSON.parse(text); } catch { return json({ error: "parse_error", detail: String(text).slice(0, 500) }); }
+    fb._model = r.model;
     return json(fb);
   } catch (e) {
     return json({ error: "exception", detail: String(e) });
