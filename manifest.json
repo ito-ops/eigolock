@@ -1,6 +1,6 @@
 {
-  "name": "EigoLock — 開くたびに英語1問",
-  "short_name": "EigoLock",
+  "name": "エイポン — 開くたびに英語1問",
+  "short_name": "エイポン",
   "description": "対象アプリを開くたびに英語で1問。答えるとAIが添削し、復習・単語帳に貯まる学習アプリ。",
   "lang": "ja",
   "start_url": "./index.html",

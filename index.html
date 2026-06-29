@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
-<title>EigoLock | 開くたびに英語1問（プロトタイプ）</title>
+<title>エイポン | 開くたびに英語1問（プロトタイプ）</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://cdn.simpleicons.org">
@@ -15,7 +15,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="EigoLock">
+<meta name="apple-mobile-web-app-title" content="エイポン">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <style>
 :root{
@@ -579,28 +579,771 @@ input[type=text].in:focus,textarea.in:focus,select.in:focus{
 @media(min-width:620px){
   .modal{border-radius:var(--radius)}
 }
+
+/* ====== Storyset aqua mobile redesign ====== */
+:root{
+  --aqua:#5ad8d4;
+  --aqua-deep:#34b7b6;
+  --aqua-soft:#e9fbf9;
+  --mint:#c9f4ef;
+  --cream:#fffdf7;
+  --sun:#f3d374;
+  --ink:#173b42;
+  --ink-soft:#7c9395;
+  --surface:#ffffff;
+  --surface-2:#f7fdfc;
+  --line:rgba(71,151,151,.16);
+  --navy:#173b42;
+  --navy-dark:#103139;
+  --navy-mid:#2c8e8e;
+  --teal:#5ad8d4;
+  --orange:#e6be61;
+  --orange-dark:#ad7f25;
+  --gold:#f3d374;
+  --green:#35aaa0;
+  --red:#d96a6a;
+  --lav:#8aa4d8;
+  --radius:24px;
+  --radius-sm:16px;
+  --radius-lg:34px;
+  --shadow:0 18px 44px rgba(44,142,142,.14);
+  --shadow-lg:0 34px 90px rgba(23,59,66,.24);
+}
+html{background:#5fcfcb}
+body{
+  min-height:100dvh;
+  color:var(--ink);
+  background:
+    linear-gradient(145deg,rgba(101,218,214,.95),rgba(65,184,183,.95) 48%,rgba(99,206,199,.92)),
+    #5fcfcb;
+  overflow-x:hidden;
+}
+body::before,
+body::after,
+#setup::before,
+#setup::after{
+  content:"";
+  position:fixed;
+  pointer-events:none;
+  z-index:-1;
+  border:1px solid rgba(255,255,255,.17);
+}
+body::before{
+  width:520px;
+  height:520px;
+  border-radius:50%;
+  top:-190px;
+  left:calc(50% - 390px);
+}
+body::after{
+  width:270px;
+  height:270px;
+  border-radius:0 0 0 100%;
+  right:30px;
+  top:18px;
+}
+#setup::before{
+  width:620px;
+  height:620px;
+  border-radius:50%;
+  top:78px;
+  left:50%;
+  transform:translateX(-50%);
+  background:rgba(255,255,255,.06);
+}
+#setup::after{
+  width:260px;
+  height:260px;
+  right:-42px;
+  bottom:86px;
+  border-radius:50%;
+}
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible{
+  outline:3px solid rgba(243,211,116,.55);
+  outline-offset:3px;
+}
+.hide{display:none!important}
+#setup{
+  position:fixed;
+  inset:0;
+  z-index:1000;
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+  overflow-y:auto;
+  background:transparent;
+  padding:34px 18px 52px;
+}
+.setup-wrap,
+#app{
+  width:min(100%,430px);
+  background:linear-gradient(180deg,rgba(255,255,255,.98),rgba(247,253,252,.96));
+  border:1px solid rgba(255,255,255,.68);
+  border-radius:var(--radius-lg);
+  box-shadow:var(--shadow-lg);
+}
+.setup-wrap{
+  position:relative;
+  margin:0 auto;
+  padding:28px 22px 24px;
+}
+.setup-brand{
+  text-align:left;
+  margin-bottom:20px;
+}
+.setup-logo{
+  display:flex;
+  border:0;
+  padding:0;
+  font-size:1.84rem;
+  color:var(--ink);
+}
+.setup-logo .lock,
+.topbar .brand .lock{color:var(--aqua-deep)}
+.setup-tag{
+  margin-top:8px;
+  color:var(--ink-soft);
+  font-size:.72rem;
+  text-transform:none;
+}
+.setup-lead{
+  margin-top:16px;
+  font-size:.9rem;
+  color:#5d7778;
+  line-height:1.9;
+}
+.setup-visual{
+  height:178px;
+  margin:0 0 22px;
+  border-radius:28px;
+  background:linear-gradient(145deg,#72e4e0,#5ed8d5 58%,#77e9df);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.58),0 20px 38px rgba(66,190,188,.22);
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.setup-visual img{
+  width:92%;
+  max-height:190px;
+  object-fit:contain;
+  filter:drop-shadow(0 16px 18px rgba(23,59,66,.12));
+}
+.asset-credit{
+  margin-top:12px;
+  text-align:center;
+  font-size:.64rem;
+}
+.asset-credit a{
+  color:rgba(23,59,66,.48);
+  text-decoration:none;
+}
+#app{
+  display:none;
+  position:relative;
+  min-height:820px;
+  margin:30px auto;
+  overflow:hidden;
+  padding-bottom:96px;
+}
+.topbar{
+  position:sticky;
+  top:0;
+  height:78px;
+  padding:24px 24px 12px;
+  background:linear-gradient(180deg,rgba(255,255,255,.98),rgba(255,255,255,.82));
+  border-bottom:0;
+  box-shadow:none;
+  backdrop-filter:blur(16px);
+}
+.topbar .brand{
+  font-size:1.15rem;
+  color:var(--ink);
+}
+.topbar .streak{
+  min-height:38px;
+  gap:7px;
+  padding:7px 12px;
+  color:var(--ink);
+  background:#fff;
+  border:1px solid rgba(71,151,151,.12);
+  border-radius:16px;
+  box-shadow:0 10px 24px rgba(44,142,142,.1);
+}
+.streak .label{color:var(--ink-soft)}
+.wrap{
+  max-width:none;
+  padding:8px 22px 22px;
+}
+.view{animation:fadeup .26s ease}
+.hero{
+  margin-bottom:20px;
+  padding:18px;
+  color:var(--ink);
+  background:linear-gradient(145deg,#72e4e0 0%,#5ed8d5 58%,#80e7df 100%);
+  border-radius:30px;
+  box-shadow:0 26px 56px rgba(47,176,174,.24);
+}
+.hero-head{
+  display:grid;
+  grid-template-columns:1.08fr .92fr;
+  gap:12px;
+  align-items:center;
+  min-height:150px;
+}
+.hero-copy{position:relative;z-index:1}
+.hero-greet{
+  color:rgba(23,59,66,.68);
+  font-family:var(--font-en);
+  font-size:.72rem;
+  font-weight:700;
+}
+.hero-name{
+  margin:6px 0 8px;
+  color:var(--ink);
+  font-size:1.48rem;
+  line-height:1.25;
+}
+.hero-message{
+  color:rgba(23,59,66,.72);
+  font-size:.78rem;
+  line-height:1.75;
+}
+.hero-visual{
+  min-width:0;
+  height:146px;
+  border-radius:26px;
+  background:rgba(255,255,255,.22);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+}
+.hero-visual img{
+  width:142%;
+  max-width:none;
+  max-height:170px;
+  object-fit:contain;
+  transform:translateX(-5px);
+  filter:drop-shadow(0 14px 18px rgba(23,59,66,.1));
+}
+.hero-stats{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+  margin-top:14px;
+}
+.hstat{
+  min-width:0;
+  background:rgba(255,255,255,.42);
+  border:1px solid rgba(255,255,255,.5);
+  border-radius:22px;
+  padding:12px 6px;
+  color:var(--ink);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.34);
+}
+.hstat .n{
+  color:var(--ink);
+  font-size:1.48rem;
+}
+.hstat .n.gold{color:#d39f34}
+.hstat .l{
+  color:rgba(23,59,66,.68);
+  font-size:.58rem;
+}
+.card{
+  margin-bottom:20px;
+  padding:22px;
+  background:rgba(255,255,255,.82);
+  border:1px solid rgba(255,255,255,.82);
+  border-radius:28px;
+  box-shadow:var(--shadow);
+}
+.card-title{
+  margin-bottom:16px;
+  color:var(--ink);
+  font-size:.96rem;
+}
+.card-title .bar{
+  width:6px;
+  height:22px;
+  background:linear-gradient(180deg,var(--aqua),var(--aqua-deep));
+  border-radius:999px;
+}
+.phone-note{
+  margin-bottom:18px;
+  color:var(--ink-soft);
+  font-size:.78rem;
+  line-height:1.9;
+}
+.appgrid{
+  grid-template-columns:repeat(4,1fr);
+  gap:16px 10px;
+}
+.appicon{
+  min-height:92px;
+  gap:8px;
+  padding:10px 4px;
+  color:var(--ink);
+  font-size:.66rem;
+  border-radius:22px;
+  transition:transform .18s ease, background .18s ease;
+}
+.appicon:hover{background:rgba(90,216,212,.08)}
+.appicon:active{transform:scale(.96)}
+.appicon .ic{
+  width:52px;
+  height:52px;
+  border-radius:18px;
+  box-shadow:0 14px 24px rgba(23,59,66,.13);
+}
+.appicon .brand-img,
+.appicon .fallback-svg{
+  width:27px;
+  height:27px;
+}
+.appicon .lockbadge{
+  top:3px;
+  right:9px;
+  width:22px;
+  height:22px;
+  background:#24656b;
+  border-color:#fff;
+  box-shadow:0 8px 18px rgba(23,59,66,.18);
+}
+.btn{
+  min-height:52px;
+  border-radius:22px;
+  font-size:.9rem;
+  transition:transform .18s ease, box-shadow .18s ease, background .18s ease;
+}
+.btn-primary{
+  color:#fff;
+  background:linear-gradient(135deg,#43c8c5,#66dcd7);
+  box-shadow:0 22px 42px rgba(58,190,188,.25);
+}
+.btn-primary:hover{
+  transform:translateY(-1px);
+  box-shadow:0 26px 50px rgba(58,190,188,.3);
+}
+.btn-ghost{
+  color:var(--ink);
+  background:rgba(255,255,255,.8);
+  border:1px solid rgba(71,151,151,.16);
+  box-shadow:0 10px 24px rgba(44,142,142,.08);
+}
+.chips{gap:10px}
+.chip{
+  min-height:42px;
+  border:0;
+  border-radius:18px;
+  background:#f0fbfa;
+  color:#56787b;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.8);
+}
+.chip.on{
+  background:linear-gradient(135deg,#66dcd7,#3dc2c0);
+  color:#fff;
+  box-shadow:0 12px 24px rgba(58,190,188,.24);
+}
+.tag{
+  border-radius:14px;
+  padding:5px 10px;
+}
+.tag-teal{background:#e3fbf8;color:#269993}
+.tag-navy{background:#edf7f6;color:var(--ink)}
+.tag-gray{background:#f5f8f7;color:#718b8d}
+.tag-orange{background:#fff5da;color:#9b7428}
+.tag-red{background:#ffecec;color:#b75656}
+.tag-lav{background:#eef3ff;color:#617bb2}
+input[type=text].in,
+textarea.in,
+select.in{
+  min-height:52px;
+  padding:14px 16px;
+  background:#f8fdfc;
+  border:1px solid rgba(71,151,151,.16);
+  border-radius:20px;
+  color:var(--ink);
+}
+textarea.in{
+  min-height:118px;
+  line-height:1.8;
+}
+input[type=text].in:focus,
+textarea.in:focus,
+select.in:focus{
+  background:#fff;
+  border-color:#5ad8d4;
+  box-shadow:0 0 0 5px rgba(90,216,212,.18);
+}
+.levelcard{
+  margin-bottom:12px;
+  padding:16px;
+  border:1px solid rgba(71,151,151,.14);
+  border-radius:24px;
+  background:#fff;
+  box-shadow:0 12px 26px rgba(44,142,142,.08);
+}
+.levelcard.on{
+  border-color:rgba(90,216,212,.8);
+  background:linear-gradient(180deg,#f7fffe,#effcfa);
+  box-shadow:0 16px 34px rgba(58,190,188,.16);
+}
+.levelcard .lc-badge{
+  background:#24656b;
+  border-radius:13px;
+}
+.levelcard.on .lc-badge{background:#43c8c5}
+.levelcard .lc-title{color:var(--ink)}
+.levelcard .lc-can{color:#718b8d}
+.levelcard .lc-eg{
+  background:#f6fbfa;
+  border-radius:18px;
+  color:#37686d;
+}
+.tgl .track{
+  width:52px;
+  height:30px;
+  background:#d9eeee;
+}
+.tgl .thumb{
+  width:24px;
+  height:24px;
+}
+.tgl input:checked+.track{background:#5ad8d4}
+.tgl input:checked+.track .thumb{transform:translateX(22px)}
+.bottomnav{
+  left:50%;
+  right:auto;
+  bottom:18px;
+  width:min(calc(100vw - 34px),390px);
+  transform:translateX(-50%);
+  padding:8px;
+  background:rgba(255,255,255,.9);
+  border:1px solid rgba(255,255,255,.88);
+  border-radius:28px;
+  box-shadow:0 20px 46px rgba(23,59,66,.16);
+}
+.bottomnav-inner{
+  max-width:none;
+  gap:4px;
+}
+.bnav{
+  min-width:0;
+  min-height:58px;
+  flex:1;
+  padding:6px 4px;
+  border-radius:22px;
+  color:#91a8a9;
+  font-size:.58rem;
+}
+.bnav .ic{
+  min-width:34px;
+  min-height:30px;
+  border-radius:16px;
+}
+.bnav svg{
+  width:21px;
+  height:21px;
+}
+.bnav.active{
+  color:#287c81;
+}
+.bnav.active .ic{
+  background:#e5fbf8;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.7);
+}
+.weak-row{
+  padding:12px 2px;
+  border-bottom:1px solid rgba(71,151,151,.12);
+}
+.weak-row .cnt{color:#d39f34}
+.empty{
+  padding:34px 20px;
+  color:#86a1a3;
+}
+#lock{
+  background:
+    linear-gradient(145deg,rgba(101,218,214,.96),rgba(49,170,169,.96)),
+    #5fcfcb;
+}
+#lock.open{animation:fadeup .22s ease}
+.lock-inner{
+  width:min(100%,430px);
+  max-width:430px;
+  min-height:100dvh;
+  padding:34px 18px 42px;
+}
+.lock-locktag,
+.idiom-card{
+  background:rgba(255,255,255,.22);
+  border:1px solid rgba(255,255,255,.44);
+  border-radius:22px;
+  color:#fff;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.25);
+}
+.lock-skip{
+  border-radius:18px;
+  color:#fff;
+  border-color:rgba(255,255,255,.52);
+}
+.idiom-card{
+  padding:18px;
+  backdrop-filter:blur(14px);
+}
+.idiom-card .ex{color:#fff7bd}
+.q-card,
+.res-scorebar,
+.res-block{
+  border-radius:28px;
+  box-shadow:0 18px 44px rgba(23,59,66,.16);
+}
+.q-card{
+  padding:24px;
+  background:rgba(255,255,255,.96);
+}
+.q-text{
+  color:var(--ink);
+  font-size:1.26rem;
+  line-height:1.48;
+}
+.q-hint-btn{color:#2c8e8e}
+.lock-actions{margin-top:18px}
+.lock-foot{color:rgba(255,255,255,.82)}
+.score-ring{
+  width:74px;
+  height:74px;
+  border-radius:24px;
+}
+.res-corrected{
+  background:#eefbf9;
+  border-radius:22px;
+}
+.issue{
+  background:#f8fbfa;
+  border-left-color:#e6be61;
+  border-radius:0 20px 20px 0;
+}
+.hist-item,
+.vcard{
+  border:1px solid rgba(71,151,151,.12);
+  border-radius:24px;
+  background:rgba(255,255,255,.86);
+  box-shadow:0 12px 28px rgba(44,142,142,.08);
+}
+.hist-score,
+.step .dot{
+  border-radius:20px;
+}
+.steps::before{background:#d9eeee}
+.step.done .dot{background:#43c8c5;border-color:#43c8c5}
+.step.current .dot{
+  background:#f3d374;
+  border-color:#f3d374;
+  color:#173b42;
+  box-shadow:0 0 0 6px rgba(243,211,116,.28);
+}
+.spark .bar{
+  background:linear-gradient(to top,#48c8c5,#8ee9e3);
+  border-radius:999px 999px 0 0;
+}
+.modal-bg{background:rgba(23,59,66,.44)}
+.modal{
+  border-radius:30px 30px 0 0;
+  box-shadow:0 -18px 64px rgba(23,59,66,.22);
+}
+.region-code{
+  background:rgba(90,216,212,.16);
+  color:#287c81;
+  border-radius:12px;
+}
+.brand-logo{
+  display:block;
+  width:auto;
+  height:auto;
+}
+.brand-logo-setup{
+  max-width:258px;
+}
+.brand-logo-top{
+  width:138px;
+}
+@media(min-width:900px){
+  #app{min-height:840px}
+  .lock-inner{
+    min-height:820px;
+    margin:30px auto;
+    border-radius:var(--radius-lg);
+  }
+}
+@media(max-width:520px){
+  body::before,
+  body::after,
+  #setup::before,
+  #setup::after{display:none}
+  #setup{
+    padding:0;
+    align-items:stretch;
+  }
+  .setup-wrap,
+  #app{
+    width:100%;
+    min-height:100dvh;
+    margin:0;
+    border:0;
+    border-radius:0;
+    box-shadow:none;
+  }
+  .setup-wrap{
+    padding:30px 18px 28px;
+  }
+  .wrap{padding:6px 18px 18px}
+  .topbar{height:72px;padding:22px 18px 10px}
+  .hero{padding:17px}
+  .hero-head{
+    grid-template-columns:1fr .78fr;
+    min-height:138px;
+  }
+  .hero-visual{height:132px}
+  .card{padding:20px}
+  .bottomnav{
+    bottom:0;
+    width:100%;
+    border-radius:28px 28px 0 0;
+    border-left:0;
+    border-right:0;
+  }
+  .lock-inner{padding:26px 18px 40px}
+}
+@media(max-width:380px){
+  .hero-head{grid-template-columns:1fr}
+  .hero-visual{display:none}
+  .appgrid{grid-template-columns:repeat(4,1fr);gap:12px 6px}
+  .appicon .ic{width:46px;height:46px}
+  .appicon{font-size:.58rem}
+}
 </style>
 </head>
 <body>
 
 <!-- ===================== 設定 / オンボーディング ===================== -->
-<div id="setup">
+<style>
+#login{position:fixed;inset:0;z-index:1100;overflow-x:hidden;overflow-y:auto;background:linear-gradient(165deg,#eaf3f1 0%,#e4eef0 50%,#e9e6f4 100%);padding:30px 18px 50px}
+/* 背景の多層グロー（奥行き） */
+#login .login-bg{position:absolute;inset:0;overflow:hidden;z-index:0;pointer-events:none}
+#login .blob{position:absolute;border-radius:50%;filter:blur(72px);will-change:transform}
+#login .blob-a{width:300px;height:300px;background:radial-gradient(circle,rgba(90,216,212,.50),transparent 70%);top:-80px;right:-60px;animation:blobA 9s ease-in-out infinite}
+#login .blob-b{width:320px;height:320px;background:radial-gradient(circle,rgba(243,211,116,.42),transparent 70%);bottom:-70px;left:-80px;animation:blobB 11s ease-in-out infinite}
+#login .blob-c{width:240px;height:240px;background:radial-gradient(circle,rgba(23,59,66,.14),transparent 70%);top:40%;left:46%;animation:blobA 13s ease-in-out infinite}
+@keyframes blobA{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-18px,16px) scale(1.08)}}
+@keyframes blobB{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(16px,-14px) scale(1.1)}}
+#login .setup-wrap{position:relative;z-index:1;max-width:430px}
+#login .card{max-width:430px;margin:0 auto;border-radius:20px;box-shadow:0 24px 60px rgba(18,61,56,.14);animation:loginRise .6s .12s ease both}
+/* 登場アニメーション */
+#login .setup-brand{animation:loginRise .6s ease both}
+@keyframes loginRise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.login-welcome{font-family:var(--font-jp);font-weight:800;font-size:1.2rem;color:var(--navy);margin-top:10px;letter-spacing:.02em}
+.login-error{background:#fbe9e9;color:var(--red,#d64545);border-radius:10px;padding:10px 12px;font-size:.82rem;font-weight:700;margin-bottom:12px;line-height:1.5}
+.login-divider{display:flex;align-items:center;gap:10px;color:var(--ink-soft,#587672);font-size:.74rem;margin:18px 0 14px}
+.login-divider::before,.login-divider::after{content:"";flex:1;height:1px;background:var(--line,#dfeae8)}
+/* ログイン入力欄（email/password にも確実に効くよう #login で上書き） */
+#login input.in{width:100%;min-height:52px;padding:14px 16px;background:var(--surface-2);border:1.5px solid rgba(71,151,151,.22);border-radius:16px;color:var(--ink);transition:.2s}
+#login input.in::placeholder{color:#9fb3ad}
+#login input.in:focus{outline:none;background:#fff;border-color:var(--teal);box-shadow:0 0 0 4px rgba(90,216,212,.22)}
+/* アイコン付きフィールド */
+.field{position:relative;transition:transform .18s}
+.field:focus-within{transform:translateY(-1px)}
+.field-ic{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--ink-soft);pointer-events:none;z-index:1;transition:color .2s}
+.field-ic svg{width:100%;height:100%;display:block;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.field:focus-within .field-ic{color:var(--teal)}
+#login input.in-icon{padding-left:44px}
+#login input.in-icon-r{padding-right:48px}
+.pw-toggle{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:34px;height:34px;display:flex;align-items:center;justify-content:center;color:var(--ink-soft);border-radius:9px;transition:.15s;z-index:2}
+.pw-toggle:hover{color:var(--navy);background:var(--gray-bg)}
+.pw-toggle svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.pw-toggle .eye-hide{display:none}
+.pw-toggle.on .eye-show{display:none}
+.pw-toggle.on .eye-hide{display:block}
+/* ログインボタン（シマー＋矢印） */
+.btn-login{position:relative;overflow:hidden}
+.btn-login .btn-arrow{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;transition:transform .25s}
+.btn-login:hover .btn-arrow{transform:translateX(4px)}
+.btn-login::after{content:"";position:absolute;top:0;left:-130%;width:55%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.42),transparent);transform:skewX(-18deg);pointer-events:none}
+.btn-login:hover::after{animation:loginShine .85s ease}
+@keyframes loginShine{from{left:-130%}to{left:150%}}
+/* OAuthボタン */
+.btn-oauth{background:#fff;border:1.5px solid var(--line,#dfeae8);color:var(--ink,#1c3733);display:flex;align-items:center;justify-content:center;gap:10px;transition:.18s}
+.btn-oauth:hover{border-color:var(--navy-mid,#3fa094);box-shadow:0 6px 16px rgba(18,61,56,.10);transform:translateY(-1px)}
+.oauth-ico{width:18px;height:18px}
+@media(prefers-reduced-motion:reduce){
+  #login .blob,#login .setup-brand,#login .card{animation:none}
+  .btn-login:hover::after{animation:none}
+}
+</style>
+<div id="login">
+  <div class="login-bg" aria-hidden="true">
+    <span class="blob blob-a"></span>
+    <span class="blob blob-b"></span>
+    <span class="blob blob-c"></span>
+  </div>
   <div class="setup-wrap">
     <div class="setup-brand">
-      <div class="setup-logo">Eigo<span class="lock">Lock</span></div>
-      <div class="setup-tag">Answer to unlock</div>
+      <div class="setup-logo">エイ<span class="lock">ポン</span></div>
+      <h1 class="login-welcome">おかえりなさい</h1>
+      <p class="setup-lead">ログインして、学習データ（復習・苦手な単語）を<br>どの端末でも引き継ぎましょう。</p>
+    </div>
+    <div class="card">
+      <div id="login-error" class="login-error" style="display:none"></div>
+      <label class="fld"><span>メールアドレス</span>
+        <div class="field">
+          <span class="field-ic"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3.5 7.5l8.5 6 8.5-6"/></svg></span>
+          <input type="email" class="in in-icon" id="login-email" placeholder="you@example.com" autocomplete="email">
+        </div>
+      </label>
+      <label class="fld"><span>パスワード（6文字以上）</span>
+        <div class="field">
+          <span class="field-ic"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span>
+          <input type="password" class="in in-icon in-icon-r" id="login-password" placeholder="••••••••" autocomplete="current-password">
+          <button type="button" class="pw-toggle" aria-label="パスワードを表示" onclick="togglePw(this)">
+            <svg class="eye-show" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+            <svg class="eye-hide" viewBox="0 0 24 24"><path d="M3 3l18 18"/><path d="M10.6 5.1A10.9 10.9 0 0 1 12 5c6.5 0 10 7 10 7a17.8 17.8 0 0 1-3.1 3.9M6.6 6.6A17.8 17.8 0 0 0 2 12s3.5 7 10 7a10.9 10.9 0 0 0 4.3-.9"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg>
+          </button>
+        </div>
+      </label>
+      <button class="btn btn-primary btn-block btn-login" onclick="doSignIn()" style="margin-bottom:10px"><span>ログイン</span><svg class="btn-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+      <button class="btn btn-ghost btn-block" onclick="doSignUp()">新規登録（会員番号を自動発行）</button>
+      <div class="login-divider"><span>または</span></div>
+      <button class="btn btn-oauth btn-block" onclick="doOAuth('google')"><img class="oauth-ico" src="https://cdn.simpleicons.org/google" alt="" aria-hidden="true">Googleでログイン</button>
+      <button class="btn btn-oauth btn-block" onclick="doOAuth('apple')" style="margin-top:8px"><img class="oauth-ico" src="https://cdn.simpleicons.org/apple/000000" alt="" aria-hidden="true">Appleでログイン</button>
+      <p class="muted" style="font-size:.72rem;margin-top:12px;text-align:center">Google / Apple は Supabase ダッシュボードでの有効化が必要です。</p>
+    </div>
+  </div>
+</div>
+
+<div id="setup" style="display:none">
+  <div class="setup-wrap">
+    <div class="setup-brand">
+      <div class="setup-logo">エイ<span class="lock">ポン</span></div>
+      <div class="setup-tag">1問だけで、今日も前に進む</div>
       <div class="setup-lead">スマホを開くたびに英語で1問。<br>答えると解除＝アウトプットが毎日の習慣に。<br>まずはあなたに合わせて設定しましょう。</div>
+    </div>
+    <div class="setup-visual" aria-hidden="true">
+      <img src="assets/storyset/learning-languages-pana.svg" alt="">
     </div>
     <div class="card" id="setup-form"><!-- JSで描画 --></div>
     <button class="btn btn-primary btn-block" onclick="completeSetup()">はじめる</button>
     <p class="muted" style="text-align:center;font-size:.72rem;margin-top:14px">注記: これはデザイン確認用のWebプロトタイプです。データは端末内のみに保存され、AI添削はサンプル（モック）です。</p>
+    <p class="asset-credit"><a href="https://storyset.com/education" target="_blank" rel="noopener">Illustrations by Storyset</a></p>
   </div>
 </div>
 
 <!-- ===================== アプリ ===================== -->
 <div id="app">
   <div class="topbar">
-    <div class="brand">Eigo<span class="lock">Lock</span></div>
+    <div class="brand">エイ<span class="lock">ポン</span></div>
     <div class="streak" id="topStreak">0日</div>
   </div>
 
@@ -628,18 +1371,95 @@ input[type=text].in:focus,textarea.in:focus,select.in:focus{
   </nav>
 </div>
 
+<!-- ===================== 全ビュー共通ポリッシュ ===================== -->
+<style>
+/* 全ビュー共通：アクティブなビューの子要素が順にせり上がる登場演出 */
+.view.active{animation:none}
+.view.active>*{animation:viewRise .46s cubic-bezier(.22,.61,.36,1) both}
+.view.active>*:nth-child(2){animation-delay:.06s}
+.view.active>*:nth-child(3){animation-delay:.12s}
+.view.active>*:nth-child(4){animation-delay:.18s}
+.view.active>*:nth-child(5){animation-delay:.24s}
+.view.active>*:nth-child(n+6){animation-delay:.28s}
+@keyframes viewRise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+/* 微細インタラクション：アプリアイコン・統計タイル（ホバー対応端末のみ） */
+.appicon .ic{transition:transform .15s ease, box-shadow .15s ease}
+@media(hover:hover){
+  .appicon:hover .ic{transform:translateY(-3px);box-shadow:0 12px 22px rgba(23,90,82,.26)}
+  .hstat{transition:transform .18s ease}
+  .hstat:hover{transform:translateY(-2px)}
+}
+/* ホーム：ヒーローに上部ハイライトを重ねて奥行きを出す */
+.hero{
+  background:
+    radial-gradient(120% 95% at 88% -22%, rgba(255,255,255,.45), transparent 55%),
+    linear-gradient(145deg,#72e4e0 0%,#5ed8d5 58%,#80e7df 100%);
+}
+/* 復習・単語帳のカード：ホバーで持ち上がり、タップで軽く沈む */
+.hist-item,.vcard{transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease}
+@media(hover:hover){ .hist-item:hover,.vcard:hover{transform:translateY(-2px);box-shadow:0 18px 38px rgba(44,142,142,.16)} }
+.hist-item:active,.vcard:active{transform:scale(.992)}
+/* 進捗：4つの統計を2×2でバランスよく配置（右下の空きを解消） */
+#v-progress .hero-stats{grid-template-columns:repeat(2,1fr)}
+/* オンボーディング：フォーム項目が順にせり上がる（renderSetupで再生成されるたび発火） */
+#setup-form>*{animation:viewRise .5s ease both}
+#setup-form>*:nth-child(2){animation-delay:.05s}
+#setup-form>*:nth-child(3){animation-delay:.10s}
+#setup-form>*:nth-child(4){animation-delay:.15s}
+#setup-form>*:nth-child(n+5){animation-delay:.18s}
+@media(prefers-reduced-motion:reduce){ .view.active>*,#setup-form>*{animation:none} }
+</style>
+
 <!-- ===================== ロック画面（出題＆添削） ===================== -->
+<style>
+/* ロック画面リファイン：背景の奥行き／CTA視認性／登場演出（#lock スコープ限定） */
+#lock{
+  background:
+    radial-gradient(120% 80% at 82% -12%, rgba(255,255,255,.24), transparent 58%),
+    radial-gradient(95% 72% at 6% 114%, rgba(243,211,116,.20), transparent 56%),
+    linear-gradient(157deg,#6fe0db 0%,#43c8c5 46%,#2c9a98 100%);
+}
+/* 主要CTA（添削して解除する／解除して閉じる）をアクア背景に対し高コントラスト化 */
+#lock .lock-actions .btn-primary{
+  background:linear-gradient(135deg,#173b42,#2c8e8e);
+  box-shadow:0 18px 38px rgba(16,49,57,.34);
+  position:relative;
+  overflow:hidden;
+}
+#lock .lock-actions .btn-primary:hover{box-shadow:0 22px 46px rgba(16,49,57,.40)}
+#lock .lock-actions .btn-primary::after{
+  content:"";position:absolute;top:0;left:-130%;width:55%;height:100%;
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.30),transparent);
+  transform:skewX(-18deg);pointer-events:none;
+}
+#lock .lock-actions .btn-primary:hover::after{animation:lockShine .9s ease}
+@keyframes lockShine{from{left:-130%}to{left:160%}}
+/* 登場アニメーション（カードが順にせり上がる） */
+@keyframes lockRise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+#lock.open .idiom-card{animation:lockRise .5s ease both}
+#lock.open .q-card{animation:lockRise .5s .08s ease both}
+#lock.open .lock-actions{animation:lockRise .5s .16s ease both}
+#lock.open .res-scorebar{animation:lockRise .5s ease both}
+#lock.open .res-block{animation:lockRise .5s .08s ease both}
+@media(prefers-reduced-motion:reduce){
+  #lock.open .idiom-card,#lock.open .q-card,#lock.open .lock-actions,
+  #lock.open .res-scorebar,#lock.open .res-block{animation:none}
+  #lock .lock-actions .btn-primary:hover::after{animation:none}
+}
+</style>
 <div id="lock"><div class="lock-inner" id="lock-inner"></div></div>
 
 <!-- トースト / モーダル -->
 <div id="toast"></div>
 <div class="modal-bg" id="modal-bg" onclick="if(event.target===this)closeModal()"><div class="modal" id="modal-body"></div></div>
 
+<!-- Supabase（認証＋データ保存） -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 /* =========================================================================
-   EigoLock — プロトタイプ ロジック（依存ライブラリなし / localStorage）
+   エイポン — プロトタイプ ロジック（依存ライブラリなし / localStorage）
    ========================================================================= */
-const NS='eigolock.v1';
+const NS='eipon.v1';
 const store={
   get(k,fb){try{const v=localStorage.getItem(NS+'.'+k);return v?JSON.parse(v):fb}catch(e){return fb}},
   set(k,v){localStorage.setItem(NS+'.'+k,JSON.stringify(v))}
@@ -668,10 +1488,6 @@ const ICONS={
 };
 function icon(name){return ICONS[name]||'';}
 function regionCode(id){return `<span class="region-code">${esc(id)}</span>`;}
-function appIconHTML(app){
-  if(app.icon)return `<img class="brand-img" src="${esc(app.icon)}" alt="" aria-hidden="true" loading="lazy">`;
-  return icon(app.fallback||'camera');
-}
 
 /* ---------- マスタデータ ---------- */
 const CATEGORIES=[
@@ -693,16 +1509,6 @@ const REGIONS=[
   {id:'UK',name:'イギリス'},{id:'AU',name:'オーストラリア'}
 ];
 const REGION=Object.fromEntries(REGIONS.map(r=>[r.id,r]));
-const SNS_APPS=[
-  {id:'instagram',name:'Instagram',icon:'https://cdn.simpleicons.org/instagram/FFFFFF',bg:'linear-gradient(135deg,#f9ce34 0%,#ee2a7b 48%,#6228d7 100%)'},
-  {id:'x',name:'X',icon:'https://cdn.simpleicons.org/x/FFFFFF',bg:'#0f0f10'},
-  {id:'tiktok',name:'TikTok',icon:'https://cdn.simpleicons.org/tiktok/FFFFFF',bg:'#010101'},
-  {id:'youtube',name:'YouTube',icon:'https://cdn.simpleicons.org/youtube/FFFFFF',bg:'#ff0033'},
-  {id:'line',name:'LINE',icon:'https://cdn.simpleicons.org/line/FFFFFF',bg:'#06c755'},
-  {id:'facebook',name:'Facebook',icon:'https://cdn.simpleicons.org/facebook/FFFFFF',bg:'#1877f2'},
-  {id:'maps',name:'Google Maps',icon:'https://cdn.simpleicons.org/googlemaps/FFFFFF',bg:'linear-gradient(135deg,#4285f4 0%,#34a853 100%)'},
-  {id:'camera',name:'Camera',fallback:'camera',bg:'linear-gradient(135deg,#4b5563 0%,#111827 100%)'}
-];
 // 質問バンク（ハイブリッドのバンク側）
 const QUESTIONS=[
   {category:'food',level:'A1',text:'What did you have for lunch today?',hint:'今日のお昼ごはんは何でしたか？'},
@@ -749,17 +1555,17 @@ const IDIOMS=[
 ];
 
 /* ---------- 状態 ---------- */
-let profile=store.get('profile',null);
-let history=store.get('history',[]);
-let vocab=store.get('vocab',[]);
-let stats=store.get('stats',{streak:0,lastDay:null,totalAnswered:0});
+// 状態（ログイン後に Supabase から読み込む。localStorage はオフライン用キャッシュ）
+let profile=null;
+let history=[];
+let vocab=[];
+let stats={streak:0,lastDay:null,totalAnswered:0};
 let currentQ=null, reviewFilter='all', reviewSearch='';
 
 const DEFAULT_PROFILE={
   name:'', level:'A2',
   interests:['daily','food','hobby'],
   regions:['US','CA','UK','AU'],
-  gatedApps:['instagram','x','tiktok','youtube'],
   skipAllowed:false, notify:true, aiRatio:0.4
 };
 
@@ -794,11 +1600,6 @@ function settingsFormHTML(d,scope){
   <div class="fld"><span style="display:block;font-size:.78rem;font-weight:700;color:var(--ink-soft);margin-bottom:6px">学びたい英語の地域（イディオムを定期的に出題）</span>
     <div class="chips" data-multi="regions">
       ${REGIONS.map(r=>`<button type="button" class="chip ${d.regions.includes(r.id)?'on':''}" data-val="${r.id}">${regionCode(r.id)} ${r.name}</button>`).join('')}
-    </div></div>
-
-  <div class="fld"><span style="display:block;font-size:.78rem;font-weight:700;color:var(--ink-soft);margin-bottom:6px">ロックの対象アプリ（開くたびに出題されます）</span>
-    <div class="chips" data-multi="gatedApps">
-      ${SNS_APPS.map(a=>`<button type="button" class="chip ${d.gatedApps.includes(a.id)?'on':''}" data-val="${a.id}">${a.name}</button>`).join('')}
     </div></div>
 
   <div class="fld" style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px">
@@ -840,10 +1641,10 @@ function bindSettingsForm(scope){
 }
 function completeSetup(){
   if(setupDraft.interests.length===0){toast('興味のあるテーマを1つ以上選んでください');return;}
-  if(setupDraft.gatedApps.length===0){toast('ロック対象アプリを1つ以上選んでください');return;}
   profile=setupDraft; store.set('profile',profile);
+  saveProfileRemote();
   $('#setup').style.display='none'; $('#app').style.display='block';
-  renderAll(); toast('設定完了。対象アプリを開いて英語を始めましょう');
+  renderAll(); toast('設定完了。さっそく1問やってみましょう');
 }
 
 /* =======================================================================
@@ -871,33 +1672,27 @@ function renderTopStreak(){
 function renderHome(){
   const name=profile.name?profile.name:'あなた';
   const today=history.filter(h=>sameDay(h.createdAt,new Date())).length;
-  const avg=history.length?Math.round(history.reduce((s,h)=>s+h.score,0)/history.length):'—';
   const weak=weakPoints();
   $('#v-home').innerHTML=`
     <div class="hero">
-      <div class="hero-greet">今日の英語アウトプット</div>
-      <div class="hero-name">${esc(name)} さん</div>
+      <div class="hero-head">
+        <div class="hero-copy">
+          <div class="hero-greet">Today Practice</div>
+          <div class="hero-name">${esc(name)} さん</div>
+          <p class="hero-message">ロック解除までの1問を、軽く自然に積み上げましょう。</p>
+        </div>
+        <div class="hero-visual" aria-hidden="true">
+          <img src="assets/storyset/learning-languages-pana.svg" alt="">
+        </div>
+      </div>
       <div class="hero-stats">
         <div class="hstat"><div class="n gold">${stats.streak}</div><div class="l">連続日数</div></div>
         <div class="hstat"><div class="n">${today}</div><div class="l">今日の回答</div></div>
-        <div class="hstat"><div class="n">${avg}</div><div class="l">平均スコア</div></div>
+        <div class="hstat"><div class="n">${stats.totalAnswered}</div><div class="l">累計回答</div></div>
       </div>
     </div>
 
-    <div class="card">
-      <div class="card-title"><span class="bar"></span>対象アプリ（タップで体験）</div>
-      <p class="phone-note">ロック対象のアプリを開こうとすると<b>英語1問</b>が出ます。答えると解除されます（本番のiOSでは Screen Time のシールドで再現）。</p>
-      <div class="appgrid">
-        ${SNS_APPS.map(a=>{const gated=profile.gatedApps.includes(a.id);return `
-          <button class="appicon" onclick="${gated?`openApp('${a.id}')`:`toast('「${a.name}」はロック対象外です')`}">
-            <span class="ic" style="background:${a.bg};color:#fff">${appIconHTML(a)}</span>
-            ${gated?`<span class="lockbadge">${icon('lock')}</span>`:''}
-            <span>${a.name}</span>
-          </button>`}).join('')}
-      </div>
-    </div>
-
-    <button class="btn btn-primary btn-block" style="margin-bottom:16px" onclick="openApp(null)">${icon('edit')} 今すぐ1問やってみる</button>
+    <button class="btn btn-primary btn-block" style="margin-bottom:16px" onclick="openQuiz()">${icon('edit')} 今すぐ1問やってみる</button>
 
     <div class="card">
       <div class="card-title"><span class="bar"></span>あなたの弱点 TOP3</div>
@@ -951,9 +1746,7 @@ function pickIdiom(){
 /* =======================================================================
    ロック画面：出題 → 回答 → 添削
    ======================================================================= */
-let lockTriggerApp=null;
-function openApp(appId){
-  lockTriggerApp=appId?SNS_APPS.find(a=>a.id===appId):null;
+function openQuiz(){
   currentQ=pickQuestion();
   renderLockQuestion();
   $('#lock').classList.add('open');
@@ -963,10 +1756,9 @@ function renderLockQuestion(){
   const q=currentQ;
   const showIdiom=(stats.totalAnswered%3===0); // 定期的に地域イディオムのワンポイント
   const idiom=showIdiom?pickIdiom():null;
-  const trig=lockTriggerApp?`${esc(lockTriggerApp.name)} を開くには`:'今日の1問';
   $('#lock-inner').innerHTML=`
     <div class="lock-top">
-      <span class="lock-locktag">${icon('lock')} ${trig}</span>
+      <span class="lock-locktag">${icon('lock')} 今日の1問</span>
       ${profile.skipAllowed?`<button class="lock-skip" onclick="skipLock()">あとで</button>`:''}
     </div>
     ${idiom?`<div class="idiom-card">
@@ -991,11 +1783,11 @@ function renderLockQuestion(){
     <div class="lock-actions">
       <button class="btn btn-primary btn-block" id="submitBtn" onclick="submitAnswer()">${icon('unlock')} 添削して解除する</button>
     </div>
-    <div class="lock-foot">答えると ${lockTriggerApp?esc(lockTriggerApp.name):'アプリ'} が開けます（プロトのデモ）</div>`;
+    <div class="lock-foot">答えると解除されます</div>`;
   setTimeout(()=>{const a=$('#answerBox');if(a)a.focus();},120);
 }
-function skipLock(){closeLock();toast('「あとで」を選びました（対象アプリを開けます）');}
-function closeLock(){$('#lock').classList.remove('open');document.body.style.overflow='';lockTriggerApp=null;}
+function skipLock(){closeLock();toast('「あとで」を選びました');}
+function closeLock(){$('#lock').classList.remove('open');document.body.style.overflow='';}
 
 async function submitAnswer(){
   const ans=$('#answerBox').value.trim();
@@ -1007,6 +1799,7 @@ async function submitAnswer(){
   const rec={id:'h_'+Date.now(),questionText:currentQ.text,category:currentQ.category,level:currentQ.level,answer:ans,feedback:fb,score:fb.score,createdAt:new Date().toISOString()};
   history.unshift(rec);store.set('history',history);
   updateStreak();
+  addAnswerRemote(rec); saveProfileRemote();
   renderLockResult(rec);
 }
 
@@ -1092,15 +1885,10 @@ function buildMockFeedback({question,answer,profile}){
 
 function renderLockResult(rec){
   const fb=rec.feedback;
-  const sc=rec.score;
-  const col=sc>=80?'var(--green)':sc>=60?'var(--navy)':'var(--orange-dark)';
   const correctedHTML=highlightDiff(rec.answer,fb.corrected);
   $('#lock-inner').innerHTML=`
     <div class="lock-top"><span class="lock-locktag">${icon('check')} 添削完了</span></div>
-    <div class="res-scorebar">
-      <div class="score-ring" style="background:${col}"><span class="s">${sc}</span><span class="o">SCORE</span></div>
-      <div><div class="lvl">推定レベル ${fb.level_estimate}</div><div class="praise">${esc(fb.praise)}</div></div>
-    </div>
+    <div class="res-scorebar"><div class="praise">${esc(fb.praise)}</div></div>
 
     <div class="res-block">
       <h4>${icon('edit')} 修正後の自然な英文</h4>
@@ -1133,11 +1921,13 @@ function renderLockResult(rec){
     <div class="lock-foot">この内容は「復習」タブにいつでも残ります</div>`;
   $('#lock').scrollTop=0;
 }
-function finishLock(){closeLock();const tn=lockTriggerApp; toast('解除しました。よくできました');renderAll();}
+function finishLock(){closeLock();toast('解除しました。よくできました');renderAll();}
 function saveVocab(item,btn){
   if(vocab.some(v=>v.word===item.word)){toast('すでに保存済みです');return;}
-  vocab.unshift({id:'v_'+Date.now(),...item,savedAt:new Date().toISOString()});
+  const vrec={id:'v_'+Date.now(),...item,savedAt:new Date().toISOString()};
+  vocab.unshift(vrec);
   store.set('vocab',vocab);
+  addVocabRemote(vrec);
   if(btn){btn.classList.add('done');btn.textContent='保存済み';}
   toast('単語帳に保存しました');
 }
@@ -1201,15 +1991,13 @@ function renderReviewList(){
   if(reviewSearch)items=items.filter(h=>(h.questionText+' '+h.answer).toLowerCase().includes(reviewSearch.toLowerCase()));
   const el=$('#reviewList');if(!el)return;
   el.innerHTML=items.length?items.map(h=>{
-    const col=h.score>=80?'var(--green)':h.score>=60?'var(--navy)':'var(--orange-dark)';
     return `<div class="hist-item" onclick="openHistory('${h.id}')">
-      <div class="hist-score" style="background:${col}">${h.score}</div>
       <div class="hist-body">
         <div class="hist-q">${esc(h.questionText)}</div>
         <div class="hist-a">${esc(h.answer)}</div>
         <div class="hist-meta"><span class="tag tag-teal">${CAT_NAME[h.category]||h.category}</span><span>${fmtDateTime(h.createdAt)}</span></div>
       </div></div>`;
-  }).join(''):'<div class="empty">まだ履歴がありません。対象アプリを開いて1問答えてみましょう。</div>';
+  }).join(''):'<div class="empty">まだ履歴がありません。ホームの「今すぐ1問」から答えてみましょう。</div>';
 }
 function openHistory(id){
   const h=history.find(x=>x.id===id);if(!h)return;
@@ -1241,17 +2029,13 @@ function renderVocab(){
         <button class="del" onclick="event.stopPropagation();removeVocab('${v.id}')">削除</button>
       </div>`).join('')}</div>`:'<div class="empty">まだ保存した単語がありません。添削画面の「保存」から追加できます。</div>'}`;
 }
-function removeVocab(id){vocab=vocab.filter(v=>v.id!==id);store.set('vocab',vocab);renderVocab();toast('削除しました');}
+function removeVocab(id){vocab=vocab.filter(v=>v.id!==id);store.set('vocab',vocab);removeVocabRemote(id);renderVocab();toast('削除しました');}
 
 /* =======================================================================
    進捗
    ======================================================================= */
 function renderProgress(){
   const total=history.length;
-  const avg=total?Math.round(history.reduce((s,h)=>s+h.score,0)/total):0;
-  const lvIdx=avg>=85?4:avg>=72?3:avg>=58?2:avg>=48?1:0;
-  const recent=history.slice(0,12).reverse();
-  const maxS=100;
   $('#v-progress').innerHTML=`
     <h1 class="page-title"><span class="en-label">Progress</span>進捗</h1>
     <p class="page-desc">続けるほど伸びます。毎日の1問が積み上がります。</p>
@@ -1260,24 +2044,8 @@ function renderProgress(){
       <div class="hero-stats">
         <div class="hstat"><div class="n gold">${stats.streak}</div><div class="l">連続日数</div></div>
         <div class="hstat"><div class="n">${stats.totalAnswered}</div><div class="l">累計回答</div></div>
-        <div class="hstat"><div class="n">${total?avg:'—'}</div><div class="l">平均スコア</div></div>
         <div class="hstat"><div class="n">${vocab.length}</div><div class="l">保存単語</div></div>
       </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title"><span class="bar"></span>推定レベル</div>
-      <div class="steps">
-        ${LEVELS.map((l,i)=>`<div class="step ${i<lvIdx?'done':i===lvIdx?'current':''}"><div class="dot">${l}</div><div class="lbl">${({A1:'入門',A2:'初級',B1:'中級',B2:'中上級',C1:'上級'})[l]}</div></div>`).join('')}
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title"><span class="bar"></span>直近のスコア推移</div>
-      ${recent.length?`<div class="spark">
-        ${recent.map(h=>`<div class="bar" style="height:${Math.max(6,h.score/maxS*100)}%"><span>${h.score}</span></div>`).join('')}
-      </div><div class="spark-x">${recent.map(h=>{const d=new Date(h.createdAt);return `<div>${d.getMonth()+1}/${d.getDate()}</div>`}).join('')}</div>`
-      :'<div class="empty">回答するとスコアの推移が表示されます。</div>'}
     </div>
 
     <div class="card">
@@ -1296,6 +2064,12 @@ function renderSettings(){
   $('#v-settings').innerHTML=`
     <h1 class="page-title"><span class="en-label">Settings</span>設定</h1>
     <p class="page-desc">いつでも変更できます。変更後は「保存」を押してください。</p>
+    <div class="card">
+      <div class="card-title"><span class="bar"></span>アカウント</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;font-size:.86rem;margin-bottom:8px"><span class="muted">会員番号</span><b class="en">${memberNo?('No. '+memberNo):'—'}</b></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;font-size:.86rem;margin-bottom:14px;gap:10px"><span class="muted">メール</span><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${authUser?esc(authUser.email||''):''}</span></div>
+      <button class="btn btn-ghost btn-block" onclick="logout()">ログアウト</button>
+    </div>
     <div class="card" id="settings-form">${settingsFormHTML(profile,'profile')}</div>
     <button class="btn btn-primary btn-block" onclick="saveSettings()" style="margin-bottom:12px">設定を保存する</button>
     <button class="btn btn-ghost btn-block" onclick="resetData()" style="border-color:var(--red);color:var(--red)">データを初期化する（デモ用）</button>`;
@@ -1303,8 +2077,7 @@ function renderSettings(){
 }
 function saveSettings(){
   if(profile.interests.length===0){toast('興味のあるテーマを1つ以上選んでください');return;}
-  if(profile.gatedApps.length===0){toast('ロック対象アプリを1つ以上選んでください');return;}
-  store.set('profile',profile);toast('設定を保存しました');renderAll();
+  store.set('profile',profile);saveProfileRemote();toast('設定を保存しました');renderAll();
 }
 function resetData(){
   showModal(`<div class="card-title"><span class="bar"></span>データを初期化しますか？</div>
@@ -1312,14 +2085,118 @@ function resetData(){
     <div style="display:flex;gap:10px"><button class="btn btn-ghost" style="flex:1" onclick="closeModal()">やめる</button>
     <button class="btn btn-primary" style="flex:1;background:var(--red)" onclick="doReset()">初期化する</button></div>`);
 }
-function doReset(){localStorage.removeItem(NS+'.profile');localStorage.removeItem(NS+'.history');localStorage.removeItem(NS+'.vocab');localStorage.removeItem(NS+'.stats');location.reload();}
+async function doReset(){ closeModal(); await deleteAllRemote(); resetMemory(); localStorage.removeItem(NS+'.profile');localStorage.removeItem(NS+'.history');localStorage.removeItem(NS+'.vocab');localStorage.removeItem(NS+'.stats'); location.reload(); }
 
 /* =======================================================================
    初期化
    ======================================================================= */
-function boot(){
-  if(profile){$('#setup').style.display='none';$('#app').style.display='block';renderAll();}
-  else{renderSetup();}
+/* =======================================================================
+   Supabase（認証 + データ保存）
+   ======================================================================= */
+const SB_URL='https://tclfuzpilactborjkgod.supabase.co';
+const SB_KEY='sb_publishable_z2PoNToXRvffcVpVdHZmfA_4v8E72AV'; // publishable（公開可・RLSで保護）
+let sb=null, authUser=null, memberNo=null;
+
+function showOnly(which){
+  $('#login').style.display = which==='login'?'block':'none';
+  $('#setup').style.display = which==='setup'?'block':'none';
+  $('#app').style.display   = which==='app'?'block':'none';
+}
+function resetMemory(){ profile=null; history=[]; vocab=[]; stats={streak:0,lastDay:null,totalAnswered:0}; memberNo=null; }
+function showLogin(){ resetMemory(); showOnly('login'); }
+function loginError(msg){ const e=$('#login-error'); if(e){ e.textContent=msg; e.style.display='block'; } }
+function loginClearError(){ const e=$('#login-error'); if(e) e.style.display='none'; }
+function togglePw(btn){ const inp=btn.parentElement.querySelector('input'); if(!inp) return; const show=inp.type==='password'; inp.type=show?'text':'password'; btn.classList.toggle('on',show); btn.setAttribute('aria-label',show?'パスワードを隠す':'パスワードを表示'); }
+
+async function afterLogin(){
+  await loadFromSupabase();
+  if(profile){ showOnly('app'); renderAll(); }
+  else { showOnly('setup'); renderSetup(); }
+}
+
+async function loadFromSupabase(){
+  if(!sb||!authUser) return;
+  try{
+    const { data:prof } = await sb.from('profiles').select('member_no,data,stats').eq('id',authUser.id).maybeSingle();
+    if(prof){
+      memberNo = prof.member_no;
+      profile = (prof.data && Object.keys(prof.data).length) ? prof.data : null;
+      stats = prof.stats || {streak:0,lastDay:null,totalAnswered:0};
+    }
+    const { data:ans } = await sb.from('answers').select('data').eq('user_id',authUser.id).order('created_at',{ascending:false});
+    history = (ans||[]).map(r=>r.data);
+    const { data:voc } = await sb.from('vocab').select('data').eq('user_id',authUser.id).order('saved_at',{ascending:false});
+    vocab = (voc||[]).map(r=>r.data);
+  }catch(e){ toast('データの読み込みに失敗しました'); }
+}
+
+async function saveProfileRemote(){
+  if(!sb||!authUser) return;
+  const { error } = await sb.from('profiles').upsert({ id:authUser.id, data:profile||{}, stats, updated_at:new Date().toISOString() });
+  if(error) toast('保存に失敗（通信）');
+}
+async function addAnswerRemote(rec){
+  if(!sb||!authUser) return;
+  const { error } = await sb.from('answers').insert({ id:rec.id, user_id:authUser.id, data:rec, created_at:rec.createdAt });
+  if(error) toast('回答の保存に失敗（通信）');
+}
+async function addVocabRemote(item){
+  if(!sb||!authUser) return;
+  await sb.from('vocab').insert({ id:item.id, user_id:authUser.id, data:item, saved_at:item.savedAt });
+}
+async function removeVocabRemote(id){
+  if(!sb||!authUser) return;
+  await sb.from('vocab').delete().eq('id',id).eq('user_id',authUser.id);
+}
+async function deleteAllRemote(){
+  if(!sb||!authUser) return;
+  await sb.from('answers').delete().eq('user_id',authUser.id);
+  await sb.from('vocab').delete().eq('user_id',authUser.id);
+  await sb.from('profiles').update({ data:{}, stats:{streak:0,lastDay:null,totalAnswered:0} }).eq('id',authUser.id);
+}
+
+/* --- 認証アクション --- */
+async function doSignIn(){
+  loginClearError();
+  const email=$('#login-email').value.trim(), pw=$('#login-password').value;
+  if(!email||!pw){ loginError('メールとパスワードを入力してください'); return; }
+  const { error } = await sb.auth.signInWithPassword({ email, password:pw });
+  if(error){ loginError('メールアドレスまたはパスワードが違います'); }
+  // 成功時は onAuthStateChange(SIGNED_IN) が afterLogin を呼ぶ
+}
+async function doSignUp(){
+  loginClearError();
+  const email=$('#login-email').value.trim(), pw=$('#login-password').value;
+  if(!email||pw.length<6){ loginError('メールと6文字以上のパスワードを入力してください'); return; }
+  const { data, error } = await sb.auth.signUp({ email, password:pw });
+  if(error){ loginError(error.message||'登録に失敗しました'); return; }
+  if(!data.session){ loginError('確認メールを送信しました。メール内のリンクで認証後、ログインしてください。'); }
+  // メール確認OFFなら session が返り、onAuthStateChange が afterLogin を呼ぶ
+}
+async function doOAuth(provider){
+  loginClearError();
+  const { error } = await sb.auth.signInWithOAuth({ provider, options:{ redirectTo: location.href.split('#')[0] } });
+  if(error){ loginError((provider==='google'?'Google':'Apple')+'ログインは未設定です（Supabaseダッシュボードで有効化が必要）'); }
+}
+async function logout(){ await sb.auth.signOut(); } // SIGNED_OUT → showLogin
+
+/* =======================================================================
+   初期化
+   ======================================================================= */
+async function boot(){
+  if(!window.supabase){ alert('オンライン接続が必要です（Supabaseの読み込みに失敗）'); return; }
+  sb = window.supabase.createClient(SB_URL, SB_KEY);
+  sb.auth.onAuthStateChange((event, session)=>{
+    // 注意: このコールバック内で直接 await して Supabase を呼ぶと
+    // supabase-js の認証ロックとデッドロックする。setTimeout で外へ逃がす。
+    if(session && session.user){
+      const same = authUser && authUser.id===session.user.id;
+      authUser = session.user;
+      if(!same) setTimeout(function(){ afterLogin(); }, 0);
+    } else {
+      authUser=null; showLogin();
+    }
+  });
 }
 boot();
 

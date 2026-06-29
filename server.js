@@ -25,4 +25,4 @@ http.createServer((req, res) => {
     res.writeHead(200, {'Content-Type': TYPES[path.extname(filePath)] || 'application/octet-stream'});
     res.end(data);
   });
-}).listen(PORT, () => console.log('EigoLock preview server on http://localhost:' + PORT));
+}).listen(PORT, () => console.log('Eipon preview server on http://localhost:' + PORT));

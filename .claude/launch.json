@@ -5,7 +5,8 @@
       "name": "eigolock",
       "runtimeExecutable": "node",
       "runtimeArgs": ["server.js"],
-      "port": 8123
+      "port": 8123,
+      "autoPort": true
     }
   ]
 }
